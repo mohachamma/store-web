@@ -24,6 +24,7 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
             <nav className="hidden items-center gap-6 md:flex" aria-label={t("menu")}>
               <Link href="/" className="label hover:opacity-60">{t("shop")}</Link>
               <Link href="/collections/winter" className="label hover:opacity-60">{t("collections")}</Link>
+              <Link href="/sale" className="label text-danger hover:opacity-60">{t("sale")}</Link>
             </nav>
           )}
         </div>

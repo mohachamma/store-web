@@ -160,3 +160,24 @@ body {
     opacity: 0;
   }
 }
+
+/* ---- Brands strip ---- */
+@keyframes marquee {
+  to {
+    transform: translateX(calc(var(--sx) * -50%));
+  }
+}
+.marquee-track {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No auto-scrolling: let people scroll the strip themselves. */
+  .marquee-track {
+    animation: none !important;
+  }
+  .marquee-viewport {
+    overflow-x: auto;
+  }
+}

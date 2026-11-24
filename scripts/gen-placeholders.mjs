@@ -126,4 +126,26 @@ look("look-4", "#cbc3b6", "#c99f80", "#5a3d2b", "shirt", "#b8323a", "pants", "#2
 look("hero-1", "#c4b8a8", "#c69c7d", "#3a2a20", "hoodie", "#c2ab86", "pants", "#8f7f66", 800, 640, 1.25);
 look("hero-2", "#bfc3c6", "#d2a988", "#1d1d1d", "coat", "#3b3b3b", "pants", "#2a2a2a", 800, 640, 1.25);
 
+// Offer banner photo (placeholder).
+look("offer-1", "#d8d2c8", "#c99f80", "#2a1d16", "shirt", "#f1f0ec", "pants", "#2b2b2b", 640, 480, 1);
+
+// Fictional sample brands (no real trademarks): simple text wordmarks in different styles.
+mkdirSync(`${OUT}/brands`, { recursive: true });
+const wordmarks = {
+  atlas: { text: "ATLAS", font: "Georgia, serif", weight: 700, spacing: 6, size: 30 },
+  nordik: { text: "NORDIK", font: "Arial, sans-serif", weight: 800, spacing: 3, size: 26 },
+  "maison-alba": { text: "Maison Alba", font: "Georgia, serif", weight: 400, style: "italic", spacing: 0, size: 28 },
+  kasbah: { text: "KASBAH", font: "Trebuchet MS, sans-serif", weight: 700, spacing: 8, size: 26 },
+  oasis: { text: "OASIS", font: "Verdana, sans-serif", weight: 300, spacing: 10, size: 26 },
+  tamda: { text: "tamda", font: "Arial, sans-serif", weight: 700, spacing: 1, size: 34 },
+  riviera: { text: "RIVIERA", font: "Georgia, serif", weight: 400, spacing: 7, size: 26 },
+  sahari: { text: "SAHARI", font: "Courier New, monospace", weight: 700, spacing: 4, size: 26 },
+};
+for (const [slug, w] of Object.entries(wordmarks)) {
+  writeFileSync(
+    `${OUT}/brands/${slug}.svg`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" width="220" height="80"><text x="110" y="48" text-anchor="middle" fill="#111" font-family="${w.font}" font-size="${w.size}" font-weight="${w.weight}" font-style="${w.style ?? "normal"}" letter-spacing="${w.spacing}">${w.text}</text></svg>`,
+  );
+}
+
 console.info("placeholders written to", OUT);

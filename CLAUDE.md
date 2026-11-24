@@ -53,6 +53,9 @@ The owner speaks Arabic — reply to him in Arabic. Code, comments and commit me
 - Connect this repo to **Vercel** once and set `NEXT_PUBLIC_API_URL`.
 - Provide real brand name, logo, products and photos.
 
+## Everything editable (owner's rule)
+Any content shown in the storefront must be editable from the dashboard. For every new storefront element: add the field/endpoint in `store-api` (write it under `## Needs from API`), read it from the API here (never hard-code editable text, images, lists or numbers), and make sure `store-admin` gets a screen for it. Static UI chrome (buttons, labels like "Add to cart") stays in `messages/*.json`.
+
 ## Rules
 - Run `npm run build` and `npm run lint` before every push; fix all errors.
 - Small, clear commits on `main` unless the owner asks for branches.
@@ -61,7 +64,8 @@ The owner speaks Arabic — reply to him in Arabic. Code, comments and commit me
 ## Progress
 - [x] Phase 1 — setup: Next.js 16 + Tailwind 4 + next-intl (ar RTL / fr / en, `src/proxy.ts`), brand config, header, footer, announcement bar, mobile tab bar, mock API adapter (`src/lib/api`), `gen:api` script
 - [x] Mobile UI from the owner's reference video (see `docs/design/README.md`): home (hero card, looks + category rows), collection page, product page (vertical gallery, size chips, add-to-cart overlay), cart, favorites, search — on mock data
-- [ ] Phase 2 — remaining home sections (brands row, "why us", category cards, offer banner, newsletter) for desktop
+- [x] Brands strip (auto-scrolling marquee, pause on hover, RTL-aware, reduced-motion safe) and offer banners (dark/light, countdown) on the home page; `/sale` page; "Sale" link in the header; announcement bar text now comes from the API — all driven by data from the dashboard (mock for now)
+- [ ] Phase 2 — remaining home sections ("why us", category cards, newsletter) for desktop — each with API fields + dashboard screen
 - [ ] Phase 3 — category pages with filters/sort
 
 ## Needs from API
@@ -72,3 +76,6 @@ Shapes the storefront uses today are in `src/lib/api/types.ts` (temporary until 
 - `GET /catalog/products?q=&category=` → `ProductSummary[]` (`id, slug, name, price, compareAtPrice, image{url,alt}, category{slug,name}, isNew`)
 - `GET /catalog/products/{slug}` → `Product` = summary + `description, images[], sizes[], variants[{ id, size, color, stock, price, compareAtPrice }]`
 - `GET /catalog/products/{slug}/related` → `ProductSummary[]`
+- `GET /catalog/site` → `{ announcement: string | null }`
+- `GET /catalog/sale` → `{ enabled, title, subtitle, products: ProductSummary[] }` (products having a variant with compare-at price > price)
+- `GET /catalog/home` also returns `brands: [{ id, slug, name, logo{url,alt}, href }]`, `brandsStrip: { enabled, animated, speed, pauseOnHover, title }` and `offers: [{ id, label, title, subtitle, ctaLabel, href, image, theme: "dark"|"light", countdownEndsAt }]` (already stored in the DB: `brands`, `offers`, settings `brands_strip` / `sale_page`)

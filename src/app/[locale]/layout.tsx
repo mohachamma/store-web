@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { brand } from "@/config/brand";
 import { dirOf, routing } from "@/i18n/routing";
+import { api } from "@/lib/api";
 
 const latin = Jost({ subsets: ["latin"], variable: "--font-latin", display: "swap" });
 const wordmark = Oswald({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-wordmark", display: "swap" });
@@ -38,12 +39,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const site = await api.getSite(locale);
 
   return (
     <html lang={locale} dir={dirOf(locale)} className={`${latin.variable} ${wordmark.variable} ${arabic.variable}`}>
       <body className="min-h-svh pb-safe-tabbar md:pb-0">
         <NextIntlClientProvider>
-          <AnnouncementBar />
+          <AnnouncementBar text={site.announcement} />
           {children}
           <Footer />
           <MobileTabBar />

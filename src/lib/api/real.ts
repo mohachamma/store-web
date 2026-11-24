@@ -29,4 +29,6 @@ export const realApi: StoreApi = {
   getProduct: (slug, locale) => get(`/catalog/products/${encodeURIComponent(slug)}`, locale),
   listProducts: (query, locale) => must(get("/catalog/products", locale, { q: query.q, category: query.category })),
   getRelated: (slug, locale) => must(get(`/catalog/products/${encodeURIComponent(slug)}/related`, locale)),
+  getSale: (locale) => must(get("/catalog/sale", locale)),
+  getSite: (locale) => must(get("/catalog/site", locale)),
 };
