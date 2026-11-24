@@ -20,7 +20,7 @@ Fonts: Jost (Latin), IBM Plex Sans Arabic (Arabic), Oswald (wordmark/display).
 
 ## Motion (from the video)
 - Tapping a product photo: the photo **morphs** from the card into the first gallery image (`<ViewTransition name="product-{slug}" share="morph">` in `ProductCard` and `ProductGallery`). The destination pages are pre-rendered (`generateStaticParams`) — required for the morph to pair.
-- Tapping the hero card: the hero image and title morph into the collection header (`collection-hero`, `collection-title`); the "looks" cards then rise into place, staggered.
+- Tapping the hero card: the hero image and title morph into the collection header (`collection-hero`, `collection-title`); the "looks" row is its own layer (`view-transition-name: collection-looks`) that stays **in front of** the hero and slides in from the right edge (all languages), with the "Looks" label over the photo.
 - Tap feedback: cards shrink slightly while pressed.
 - "Added to cart" card: slides in from the start side and leaves through the other side (flips in RTL); the overlay fades.
 - Keyframes and the morph timing live at the end of `src/app/globals.css`. Browsers without View Transitions simply navigate without the morph.

@@ -57,10 +57,11 @@ export default async function CollectionPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="relative -mt-36 md:-mt-44">
-        <Row title="">
+      {/* Own named layer: stays in front of the morphing hero and slides in from the right. */}
+      <div className="relative z-10 -mt-36 md:-mt-44" style={{ viewTransitionName: "collection-looks" }}>
+        <Row title={t("looks")} titleClassName="text-paper drop-shadow-[0_1px_6px_rgba(0,0,0,.45)]">
           {collection.looks.map((look, i) => (
-            <LookCard key={look.id} look={look} priority={i < 2} enterIndex={i} />
+            <LookCard key={look.id} look={look} priority={i < 2} />
           ))}
         </Row>
       </div>
