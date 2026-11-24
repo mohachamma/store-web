@@ -21,13 +21,18 @@ export function BuyPanel({ product }: { product: Product }) {
   const firstAvailable = product.variants.find((v) => v.stock > 0)?.size ?? null;
   const [size, setSize] = useState<string | null>(firstAvailable);
   const [needSize, setNeedSize] = useState(false);
-  const [toast, setToast] = useState(false);
+  const [toast, setToast] = useState<"in" | "out" | null>(null);
   const variant = product.variants.find((v) => v.size === size);
 
   useEffect(() => {
-    if (!toast) return;
-    const id = setTimeout(() => setToast(false), 1800);
-    return () => clearTimeout(id);
+    if (toast === "in") {
+      const id = setTimeout(() => setToast("out"), 1700);
+      return () => clearTimeout(id);
+    }
+    if (toast === "out") {
+      const id = setTimeout(() => setToast(null), 450);
+      return () => clearTimeout(id);
+    }
   }, [toast]);
 
   const add = () => {
@@ -44,7 +49,7 @@ export function BuyPanel({ product }: { product: Product }) {
       size: variant.size,
       price: variant.price,
     });
-    setToast(true);
+    setToast("in");
   };
 
   const soldOut = !firstAvailable;
@@ -117,10 +122,16 @@ export function BuyPanel({ product }: { product: Product }) {
       {toast && variant ? (
         <div
           role="status"
-          className="fixed inset-0 z-50 grid place-items-center bg-black/55 px-8 [animation:fade-in_.2s_ease]"
-          onClick={() => setToast(false)}
+          className={`fixed inset-0 z-50 grid place-items-center overflow-hidden bg-black/55 px-8 ${
+            toast === "out" ? "[animation:fade-out_.4s_ease_both]" : "[animation:fade-in_.2s_ease]"
+          }`}
+          onClick={() => setToast("out")}
         >
-          <div className="flex w-full max-w-sm items-center gap-4 bg-paper p-4 shadow-2xl [animation:toast-in_.25s_ease]">
+          <div
+            className={`flex w-full max-w-sm items-center gap-4 bg-paper p-4 shadow-2xl ${
+              toast === "out" ? "[animation:toast-out_.4s_ease-in_both]" : "[animation:toast-slide_.4s_cubic-bezier(.2,.8,.2,1)_both]"
+            }`}
+          >
             <div className="relative h-20 w-20 shrink-0 bg-mist">
               <Image src={product.image.url} alt="" fill sizes="80px" className="object-contain p-1.5" />
             </div>

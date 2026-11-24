@@ -94,3 +94,69 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---- Motion (from the reference video) ---- */
+/* Shared-element morph: tapped photo grows into the destination. */
+::view-transition-group(.morph) {
+  animation-duration: 480ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  40% {
+    filter: blur(2px);
+  }
+}
+/* Everything else crossfades quickly during navigation. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+
+@keyframes img-settle {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* "Looks" slide in from the right edge, in front of the hero (same in ar/fr/en, as in the video). */
+::view-transition-old(collection-looks) {
+  animation: none;
+  opacity: 0;
+}
+::view-transition-new(collection-looks) {
+  animation: looks-slide 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms both;
+}
+@keyframes looks-slide {
+  from {
+    transform: translateX(105%);
+  }
+}
+
+/* "Added to cart" card: in from one side, out through the other (flips in RTL). */
+:root {
+  --sx: 1;
+}
+[dir="rtl"] {
+  --sx: -1;
+}
+@keyframes toast-slide {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--sx) * -120%));
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(calc(var(--sx) * 120%));
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}

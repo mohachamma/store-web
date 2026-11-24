@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ViewTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { ProductSummary } from "@/lib/api/types";
@@ -9,10 +10,13 @@ export function ProductCard({
   product,
   size = "row",
   priority = false,
+  morph = true,
 }: {
   product: ProductSummary;
   size?: "row" | "grid";
   priority?: boolean;
+  /** Give the photo a shared-element name (off for secondary rows like "related"). */
+  morph?: boolean;
 }) {
   const t = useTranslations("product");
   const discount =
@@ -25,7 +29,8 @@ export function ProductCard({
       href={`/products/${product.slug}`}
       className={`group block ${size === "row" ? "w-[38vw] max-w-[210px] shrink-0 snap-start md:w-[200px]" : ""}`}
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-mist">
+      <MaybeMorph name={morph ? `product-${product.slug}` : null}>
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-mist transition-transform duration-200 ease-out group-active:scale-[.96]">
         <Image
           src={product.image.url}
           alt={product.image.alt}
@@ -45,10 +50,21 @@ export function ProductCard({
           ) : null}
         </div>
       </div>
+      </MaybeMorph>
       <div className="mt-2.5 space-y-1 px-0.5">
         <h3 className="label line-clamp-2">{product.name}</h3>
         <Price value={product.price} compareAt={product.compareAtPrice} className="text-[11px] text-muted" />
       </div>
     </Link>
+  );
+}
+
+function MaybeMorph({ name, children }: { name: string | null; children: React.ReactNode }) {
+  return name ? (
+    <ViewTransition name={name} share="morph" default="none">
+      {children}
+    </ViewTransition>
+  ) : (
+    <>{children}</>
   );
 }
