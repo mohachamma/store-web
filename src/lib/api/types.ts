@@ -61,11 +61,59 @@ export interface CategoryRow {
   products: ProductSummary[];
 }
 
+export interface Brand {
+  id: string;
+  slug: string;
+  name: string;
+  logo: Image;
+  /** Optional link (brand page / search). */
+  href: string | null;
+}
+
+/** Controlled from the dashboard: brands + how the strip moves. */
+export interface BrandsStrip {
+  enabled: boolean;
+  animated: boolean;
+  /** Seconds for one full loop (higher = slower). */
+  speed: number;
+  pauseOnHover: boolean;
+  title: string;
+}
+
+/** A promotional banner ("35% off only this Friday"), managed in the dashboard. */
+export interface Offer {
+  id: string;
+  label: string | null;
+  title: string;
+  subtitle: string | null;
+  ctaLabel: string | null;
+  href: string | null;
+  image: Image | null;
+  theme: "dark" | "light";
+  /** ISO date; when set the banner shows a countdown. */
+  countdownEndsAt: string | null;
+}
+
+export interface SalePage {
+  enabled: boolean;
+  title: string;
+  subtitle: string | null;
+  products: ProductSummary[];
+}
+
+export interface SiteSettings {
+  /** Text of the thin bar at the top; null hides it. */
+  announcement: string | null;
+}
+
 export interface HomeContent {
   announcement: string | null;
   hero: { title: string; subtitle: string; image: Image; collectionSlug: string };
   looks: Look[];
   rows: CategoryRow[];
+  brands: Brand[];
+  brandsStrip: BrandsStrip;
+  offers: Offer[];
 }
 
 export interface CollectionPage {
@@ -88,4 +136,6 @@ export interface StoreApi {
   getProduct(slug: string, locale: Locale): Promise<Product | null>;
   listProducts(query: ProductQuery, locale: Locale): Promise<ProductSummary[]>;
   getRelated(slug: string, locale: Locale): Promise<ProductSummary[]>;
+  getSale(locale: Locale): Promise<SalePage>;
+  getSite(locale: Locale): Promise<SiteSettings>;
 }

@@ -24,3 +24,6 @@ Fonts: Jost (Latin), IBM Plex Sans Arabic (Arabic), Oswald (wordmark/display).
 - Tap feedback: cards shrink slightly while pressed.
 - "Added to cart" card: slides in from the start side and leaves through the other side (flips in RTL); the overlay fades.
 - Keyframes and the morph timing live at the end of `src/app/globals.css`. Browsers without View Transitions simply navigate without the morph.
+
+## Reference: desktop home (Nostra screenshot, Nov 2026)
+Brands strip under the hero (auto-moving, controlled from the dashboard) and a "limited offer" banner with a sale page. Implemented as `BrandsMarquee`, `OfferBanner` (+ `Countdown`) and `/sale`. Still to do from that reference: "why us" row, curated category cards, newsletter.

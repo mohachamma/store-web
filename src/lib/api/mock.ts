@@ -5,7 +5,9 @@ import type {
   CategoryRow,
   CollectionPage,
   HomeContent,
+  Brand,
   Look,
+  Offer,
   Product,
   ProductSummary,
   Size,
@@ -152,6 +154,32 @@ function rows(locale: Locale, order: string[]): CategoryRow[] {
   }));
 }
 
+const brandSeeds: [string, string][] = [
+  ["atlas", "ATLAS"], ["nordik", "NORDIK"], ["maison-alba", "Maison Alba"], ["kasbah", "KASBAH"],
+  ["oasis", "OASIS"], ["tamda", "tamda"], ["riviera", "RIVIERA"], ["sahari", "SAHARI"],
+];
+const brands = (): Brand[] =>
+  brandSeeds.map(([slug, name]) => ({ id: `b_${slug}`, slug, name, logo: { url: `/placeholders/brands/${slug}.svg`, alt: name }, href: null }));
+
+const offers = (locale: Locale): Offer[] => [
+  {
+    id: "o_friday",
+    label: { ar: "عرض محدود", fr: "Offre limitée", en: "Limited offer" }[locale],
+    title: { ar: "خصم 35% يوم الجمعة فقط", fr: "-35% ce vendredi seulement", en: "35% off only this Friday" }[locale],
+    subtitle: { ar: "واحصل على هدية مميزة", fr: "et recevez un cadeau", en: "and get a special gift" }[locale],
+    ctaLabel: { ar: "اغتنم العرض", fr: "J'en profite", en: "Grab it now" }[locale],
+    href: "/sale",
+    image: { url: "/placeholders/offer-1.svg", alt: "" },
+    theme: "dark",
+    countdownEndsAt: new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString(),
+  },
+];
+
+const saleProducts = (locale: Locale) =>
+  all(locale)
+    .filter((p) => p.variants.some((v) => v.compareAtPrice && v.compareAtPrice > v.price))
+    .map(summary);
+
 const delay = <V>(v: V) => Promise.resolve(v);
 
 export const mockApi: StoreApi = {
@@ -166,6 +194,15 @@ export const mockApi: StoreApi = {
       },
       looks: looks(locale),
       rows: rows(locale, ["outerwear", "footwear", "tops", "bottoms"]),
+      brands: brands(),
+      brandsStrip: {
+        enabled: true,
+        animated: true,
+        speed: 30,
+        pauseOnHover: true,
+        title: { ar: "علاماتنا التجارية", fr: "Nos marques", en: "Our brands" }[locale],
+      },
+      offers: offers(locale),
     }),
 
   getCollection: (slug, locale) =>
@@ -211,4 +248,21 @@ export const mockApi: StoreApi = {
         .map(summary),
     );
   },
+
+  getSale: (locale) =>
+    delay({
+      enabled: true,
+      title: { ar: "التخفيضات", fr: "Promotions", en: "Sale" }[locale],
+      subtitle: { ar: "أفضل العروض لفترة محدودة", fr: "Les meilleures offres, pour une durée limitée", en: "Our best deals, for a limited time" }[locale],
+      products: saleProducts(locale),
+    }),
+
+  getSite: (locale) =>
+    delay({
+      announcement: {
+        ar: "توصيل مجاني ابتداءً من 10,000 دج · الدفع عند الاستلام في 58 ولاية",
+        fr: "Livraison gratuite dès 10 000 DA · Paiement à la livraison dans 58 wilayas",
+        en: "Free delivery from 10,000 DA · Cash on delivery in 58 wilayas",
+      }[locale],
+    }),
 };
