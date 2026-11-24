@@ -41,7 +41,7 @@ export default async function CollectionPage({ params }: Props) {
   return (
     <main>
       {/* Full-bleed hero with title, back and share — looks overlap its bottom edge. */}
-      <div className="relative h-[52svh] min-h-80 overflow-hidden bg-mist md:h-[60vh]">
+      <div className="relative h-[53svh] min-h-80 overflow-hidden rounded-b-[28px] bg-mist md:h-[60vh]">
         <ViewTransition name="collection-hero" share="morph" default="none">
           <Image src={collection.heroImage.url} alt={collection.heroImage.alt} fill priority sizes="100vw" className="object-cover" />
         </ViewTransition>
@@ -58,7 +58,7 @@ export default async function CollectionPage({ params }: Props) {
       </div>
 
       {/* Own named layer: stays in front of the morphing hero and slides in from the right. */}
-      <div className="relative z-10 -mt-36 md:-mt-44" style={{ viewTransitionName: "collection-looks" }}>
+      <div className="relative z-10 -mt-48 md:-mt-52" style={{ viewTransitionName: "collection-looks" }}>
         <Row title={t("looks")} titleClassName="text-paper drop-shadow-[0_1px_6px_rgba(0,0,0,.45)]">
           {collection.looks.map((look, i) => (
             <LookCard key={look.id} look={look} priority={i < 2} />
