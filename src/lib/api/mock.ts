@@ -174,7 +174,7 @@ export const mockApi: StoreApi = {
         ? {
             slug,
             title: { ar: "تشكيلة الشتاء", fr: "Collection hiver", en: "Winter Collection" }[locale],
-            heroImage: { url: "/placeholders/hero-2.svg", alt: "" },
+            heroImage: { url: "/placeholders/hero-1.svg", alt: "" },
             looks: looks(locale),
             rows: rows(locale, ["bottoms", "outerwear", "footwear", "tops"]),
           }

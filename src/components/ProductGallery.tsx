@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ViewTransition } from "react";
 import type { Image as Img } from "@/lib/api/types";
 
 /** Vertical, snap-scrolling gallery with vertical dots (as in the reference video). */
-export function ProductGallery({ images }: { images: Img[] }) {
+export function ProductGallery({ images, slug }: { images: Img[]; slug: string }) {
   const t = useTranslations("product");
   const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -37,18 +37,28 @@ export function ProductGallery({ images }: { images: Img[] }) {
         tabIndex={0}
         aria-roledescription="carousel"
       >
-        {images.map((img, i) => (
-          <div key={img.url} data-index={i} className="relative h-full snap-start" aria-label={t("image", { index: i + 1, total: images.length })}>
-            <Image
-              src={img.url}
-              alt={img.alt}
-              fill
-              priority={i === 0}
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-contain p-8"
-            />
-          </div>
-        ))}
+        {images.map((img, i) => {
+          const slide = (
+            <div key={img.url} data-index={i} className="relative h-full snap-start" aria-label={t("image", { index: i + 1, total: images.length })}>
+              <Image
+                src={img.url}
+                alt={img.alt}
+                fill
+                priority={i === 0}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-contain p-8"
+              />
+            </div>
+          );
+          // Only the first image morphs from the tapped card (names must be unique on a page).
+          return i === 0 ? (
+            <ViewTransition key={img.url} name={`product-${slug}`} share="morph" default="none">
+              {slide}
+            </ViewTransition>
+          ) : (
+            slide
+          );
+        })}
       </div>
       {images.length > 1 ? (
         <div className="absolute end-4 top-1/2 flex -translate-y-1/2 flex-col items-center gap-1.5">
