@@ -323,6 +323,8 @@ export const mockApi: StoreApi = {
 
   getShippingRules: () => delay({ freeShippingOver: 10000 }),
 
+  getPaymentMethods: () => delay({ cod: true, card: false }),
+
   quote: (input) => delay(priceMock(input)),
 
   createOrder: async (body) => {
@@ -337,7 +339,7 @@ export const mockApi: StoreApi = {
       discountTotal: priced.value.discountTotal, total: priced.value.total, trackingNumber: null, createdAt: new Date().toISOString(),
       items: priced.value.items.map(({ name, size, color, unitPrice, quantity, lineTotal }) => ({ name, size, color, unitPrice, quantity, lineTotal })),
     });
-    return { ok: true, value: { orderNumber, token, status: "pending", paymentMethod: "cod", subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee, discountTotal: priced.value.discountTotal, total: priced.value.total } };
+    return { ok: true, value: { orderNumber, token, status: "pending", paymentMethod: "cod", checkoutUrl: null, subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee, discountTotal: priced.value.discountTotal, total: priced.value.total } };
   },
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),

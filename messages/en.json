@@ -113,7 +113,6 @@
     "payment": "Payment",
     "cod": "Cash on delivery",
     "codHint": "You pay in cash when you receive your order.",
-    "cardSoon": "CIB / Edahabia card — coming soon",
     "code": "Promo code",
     "codePlaceholder": "Enter code",
     "codeApply": "Apply",
@@ -142,8 +141,14 @@
       "invalid_wilaya": "Delivery is not available to this wilaya.",
       "rate_limited": "Too many orders from this number. Try again later or contact us.",
       "validation_error": "Please check the information entered.",
-      "generic": "We could not send the order. Please try again."
-    }
+      "generic": "We could not send the order. Please try again.",
+      "payment_unavailable": "Card payment is not available right now. Choose cash on delivery.",
+      "payment_failed": "We could not start the card payment. Try again or choose cash on delivery."
+    },
+    "card": "CIB / Edahabia card",
+    "cardHint": "Pay now, securely, through Chargily.",
+    "payNow": "Pay now",
+    "cardNote": "You will be taken to the secure payment page, then we call you to confirm."
   },
   "order": {
     "title": "Thank you! We received your order",
@@ -169,6 +174,15 @@
     "discount": "Discount",
     "total": "Total",
     "payment": "Cash on delivery",
-    "continue": "Continue shopping"
+    "continue": "Continue shopping",
+    "cardCallNote": "We will call you shortly to confirm your order, then ship it.",
+    "paymentCard": "Card payment (CIB / Edahabia)",
+    "pay": {
+      "paid": "Payment received. Thank you!",
+      "pending": "Waiting for the payment confirmation… refresh the page in a moment.",
+      "unpaid": "The payment is not complete. We will contact you.",
+      "failed": "The payment did not go through. We will call you to finish the order.",
+      "refunded": "The amount was refunded."
+    }
   }
 }
