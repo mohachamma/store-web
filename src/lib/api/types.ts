@@ -26,6 +26,11 @@ export type Wilaya = S["Wilaya"];
 export type Commune = S["Commune"];
 export type ShippingRules = S["ShippingRules"];
 export type PaymentMethods = S["PaymentMethods"];
+export type LoginResult = S["LoginResult"];
+export type RegisterResult = S["RegisterResult"];
+export type MeProfile = S["MeProfile"];
+export type FavoriteList = S["FavoriteList"];
+export type MyOrder = S["MyOrder"];
 export type OrderQuote = S["OrderQuote"];
 export type OrderCreated = S["OrderCreated"];
 export type OrderView = S["OrderView"];
@@ -56,6 +61,16 @@ export interface StoreApi {
   getShippingRules(): Promise<ShippingRules>;
   getPaymentMethods(): Promise<PaymentMethods>;
   quote(input: QuoteInput): Promise<Result<OrderQuote>>;
-  createOrder(body: CreateOrderBody): Promise<Result<OrderCreated>>;
+  /** `token`: the signed-in customer's access token, so the order shows up in their history. */
+  createOrder(body: CreateOrderBody, token?: string | null): Promise<Result<OrderCreated>>;
   getOrder(orderNumber: number, token: string, locale: Locale): Promise<OrderView | null>;
+  // Customer accounts (the token is the access token kept in the httpOnly cookie).
+  login(email: string, password: string): Promise<Result<LoginResult>>;
+  register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
+  getMe(token: string): Promise<MeProfile | null>;
+  updateMe(token: string, input: { name: string | null; phone: string | null }): Promise<Result<MeProfile>>;
+  getMyOrders(token: string): Promise<MyOrder[] | null>;
+  getMyFavorites(token: string, locale: Locale): Promise<FavoriteList | null>;
+  mergeFavorites(token: string, productIds: string[], locale: Locale): Promise<FavoriteList | null>;
+  setFavorite(token: string, productId: string, on: boolean): Promise<void>;
 }

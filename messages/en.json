@@ -62,8 +62,30 @@
     "empty": "No favorites yet. Tap the heart on a product to save it."
   },
   "account": {
-    "title": "Account",
-    "soon": "Customer accounts are coming soon. You can order without an account."
+    "title": "My account",
+    "login": "Sign in",
+    "register": "Create account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters.",
+    "wait": "One moment…",
+    "optional": "An account is optional: you can order without one. It keeps your favorites and your order history.",
+    "confirmEmail": "We sent a confirmation link to your email. Open it, then sign in.",
+    "logout": "Sign out",
+    "profile": "My details",
+    "phone": "Phone",
+    "save": "Save",
+    "saved": "Saved",
+    "orders": "My orders",
+    "noOrders": "No orders yet.",
+    "items": "{n} item(s)",
+    "errors": {
+      "invalid_credentials": "Wrong email or password.",
+      "email_taken": "This email is already registered. Sign in.",
+      "weak_password": "Choose a stronger password (at least 8 characters).",
+      "generic": "Something went wrong. Please try again."
+    }
   },
   "footer": {
     "about": "Modern clothing for everyday life. Delivery to all 58 wilayas, pay on delivery.",
