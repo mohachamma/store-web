@@ -15,10 +15,17 @@ type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
 // Pre-render so the hero morph (home card → collection header) has a ready destination.
 export async function generateStaticParams() {
-  const perLocale = await Promise.all(
-    routing.locales.map(async (locale) => [{ locale, slug: (await api.getHome(locale)).hero.collectionSlug }]),
-  );
-  return perLocale.flat();
+  try {
+    const perLocale = await Promise.all(
+      routing.locales.map(async (locale) => {
+        const slug = (await api.getHome(locale)).hero?.collectionSlug;
+        return slug ? [{ locale, slug }] : [];
+      }),
+    );
+    return perLocale.flat();
+  } catch {
+    return []; // API not reachable at build time: pages are rendered on demand instead
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

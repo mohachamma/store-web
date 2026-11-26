@@ -20,9 +20,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       <Header />
       <main className="space-y-3 pt-1">
         <SearchField locale={locale} />
-        <div className="pt-2">
-          <HeroCard hero={home.hero} cta={t("shopNow")} />
-        </div>
+        {home.hero ? (
+          <div className="pt-2">
+            <HeroCard hero={home.hero} cta={t("shopNow")} />
+          </div>
+        ) : null}
         <BrandsMarquee brands={home.brands} strip={home.brandsStrip} />
         {home.rows.slice(0, 1).map((row) => (
           <Row key={row.category.slug} title={row.category.name} href={`/search?category=${row.category.slug}`} viewAll={t("viewAll")}>

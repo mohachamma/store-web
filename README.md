@@ -17,3 +17,4 @@ npm run dev        # http://localhost:3000 → redirects to /ar
 - Brand (name, wordmark, colours): `src/config/brand.ts` + CSS variables in `src/app/globals.css`.
 - Data: `src/lib/api` — `mock.ts` (sample data) or `real.ts` (store-api), chosen by `NEXT_PUBLIC_USE_MOCK` / `NEXT_PUBLIC_API_URL`.
 - Design notes: `docs/design/README.md`.
+- Real API locally: in `store-api` run `npm run dev:local`, then here set `NEXT_PUBLIC_API_URL=http://localhost:8787`, `NEXT_PUBLIC_USE_MOCK=false`, `NEXT_PUBLIC_IMAGE_HOST=http://localhost:54321` and `npm run dev`.
