@@ -66,10 +66,12 @@ Any content shown in the storefront must be editable from the dashboard. For eve
 - [x] Mobile UI from the owner's reference video (see `docs/design/README.md`): home (hero card, looks + category rows), collection page, product page (vertical gallery, size chips, add-to-cart overlay), cart, favorites, search — on mock data
 - [x] Brands strip (auto-scrolling marquee, pause on hover, RTL-aware, reduced-motion safe) and offer banners (dark/light, countdown) on the home page; `/sale` page; "Sale" link in the header; announcement bar text now comes from the API — all driven by data from the dashboard (mock for now)
 - [x] **Connected to the real API** (2026-11-26): types are generated (`npm run gen:api` → `src/lib/api/schema.d.ts`, re-exported in `src/lib/api/types.ts`); `real.ts` implements the same `StoreApi` as `mock.ts`. Set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_USE_MOCK=false` to use it (leave unset to stay on mock data). Pages revalidate every 60 s. Local full stack: `npm run dev:local` in store-api.
+- [x] Checkout + cash on delivery (2026-11-26): `/checkout` (name, phone, wilaya + commune, address, home/desk, promo code, server-priced summary), `/order/{number}?t=token` confirmation page (no personal data). Only variant ids and quantities are sent; the API computes every price. Card payment (Chargily) comes later.
 - [ ] Phase 2 — remaining home sections ("why us", category cards, newsletter) for desktop — each with API fields + dashboard screen
 - [ ] Phase 3 — category pages with filters/sort
 
 ## Needs from API
+(Checkout endpoints `POST /orders/quote`, `POST /orders`, `GET /orders/{n}?token=`, `GET /shipping/wilayas`, `GET /shipping/wilayas/{code}/communes`, `GET /shipping/rules` exist since API 0.3.0.)
 Catalog endpoints, all with `?locale=ar|fr|en` returning localized names/descriptions; money as integer DZD.
 Shapes the storefront uses today are in `src/lib/api/types.ts` (temporary until generated types exist).
 - `GET /catalog/home` → `{ announcement, hero: { title, subtitle, image, collectionSlug }, looks: Look[], rows: { category, products: ProductSummary[] }[] }`

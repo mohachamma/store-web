@@ -21,6 +21,13 @@ async function must<R>(p: Promise<R | null>): Promise<R> {
   return v;
 }
 
+async function post<R>(path: string, body: unknown): Promise<{ ok: true; value: R } | { ok: false; code: string; message: string }> {
+  const res = await fetch(`${BASE}${path}`, { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (res.ok) return { ok: true, value: (await res.json()) as R };
+  const err = (await res.json().catch(() => null)) as { error?: { code?: string; message?: string } } | null;
+  return { ok: false, code: err?.error?.code ?? `http_${res.status}`, message: err?.error?.message ?? "Request failed" };
+}
+
 type Ret<K extends keyof StoreApi> = Awaited<ReturnType<StoreApi[K]>>;
 
 export const realApi: StoreApi = {
@@ -31,4 +38,10 @@ export const realApi: StoreApi = {
   getRelated: (slug, locale) => must(get<Ret<"getRelated">>(`/catalog/products/${encodeURIComponent(slug)}/related`, locale)),
   getSale: (locale) => must(get<Ret<"getSale">>("/catalog/sale", locale)),
   getSite: (locale) => must(get<Ret<"getSite">>("/catalog/site", locale)),
+  getWilayas: (locale) => must(get<Ret<"getWilayas">>("/shipping/wilayas", locale)),
+  getCommunes: (code, locale) => must(get<Ret<"getCommunes">>(`/shipping/wilayas/${code}/communes`, locale)),
+  getShippingRules: async () => (await get<Ret<"getShippingRules">>("/shipping/rules", "ar")) ?? { freeShippingOver: null },
+  quote: (input) => post("/orders/quote", input),
+  createOrder: (body) => post("/orders", body),
+  getOrder: (n, token, locale) => get<Ret<"getOrder">>(`/orders/${n}`, locale, { token }),
 };

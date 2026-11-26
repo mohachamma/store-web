@@ -24,6 +24,17 @@ export type SalePage = S["Sale"];
 export type SiteSettings = S["Site"];
 export type Wilaya = S["Wilaya"];
 export type Commune = S["Commune"];
+export type ShippingRules = S["ShippingRules"];
+export type OrderQuote = S["OrderQuote"];
+export type OrderCreated = S["OrderCreated"];
+export type OrderView = S["OrderView"];
+export type CreateOrderBody = S["CreateOrderBody"];
+
+/** What the cart sends: only variant ids and quantities — the server prices everything. */
+export type QuoteInput = Pick<CreateOrderBody, "items" | "wilayaCode" | "deliveryType" | "discountCode">;
+
+/** API refusals (out of stock, invalid code, …) are results, not exceptions, so the UI can explain them. */
+export type Result<T> = { ok: true; value: T } | { ok: false; code: string; message: string };
 
 export interface ProductQuery {
   q?: string;
@@ -39,4 +50,10 @@ export interface StoreApi {
   getRelated(slug: string, locale: Locale): Promise<ProductSummary[]>;
   getSale(locale: Locale): Promise<SalePage>;
   getSite(locale: Locale): Promise<SiteSettings>;
+  getWilayas(locale: Locale): Promise<Wilaya[]>;
+  getCommunes(wilayaCode: number, locale: Locale): Promise<Commune[]>;
+  getShippingRules(): Promise<ShippingRules>;
+  quote(input: QuoteInput): Promise<Result<OrderQuote>>;
+  createOrder(body: CreateOrderBody): Promise<Result<OrderCreated>>;
+  getOrder(orderNumber: number, token: string, locale: Locale): Promise<OrderView | null>;
 }

@@ -6,11 +6,16 @@ import type {
   CollectionPage,
   HomeContent,
   Brand,
+  Commune,
   Look,
   Offer,
   Product,
   ProductSummary,
+  OrderQuote,
+  OrderView,
+  QuoteInput,
   StoreApi,
+  Wilaya,
 } from "./types";
 
 type T = Record<Locale, string>;
@@ -181,6 +186,45 @@ const saleProducts = (locale: Locale) =>
 
 const delay = <V>(v: V) => Promise.resolve(v);
 
+const wilayas = [
+  { code: 16, ar: "الجزائر", fr: "Alger", home: 500, desk: 350 },
+  { code: 31, ar: "وهران", fr: "Oran", home: 700, desk: 450 },
+  { code: 25, ar: "قسنطينة", fr: "Constantine", home: 700, desk: 450 },
+  { code: 9, ar: "البليدة", fr: "Blida", home: 500, desk: 350 },
+  { code: 19, ar: "سطيف", fr: "Sétif", home: 800, desk: 550 },
+  { code: 30, ar: "ورقلة", fr: "Ouargla", home: 1200, desk: 800 },
+];
+
+const g = globalThis as unknown as { __mockOrders?: Map<string, OrderView> };
+const mockOrders = () => (g.__mockOrders ??= new Map());
+
+/** Same rules as the API (prices from the catalog, delivery fee, free delivery over 10 000 DA, code WELCOME10). */
+function priceMock(input: QuoteInput) {
+  const items: OrderQuote["items"] = [];
+  for (const it of input.items) {
+    const seed = seeds.find((s) => `v_${s.slug}_` === it.variantId.slice(0, `v_${s.slug}_`.length));
+    const p = seed ? toProduct(seed, "ar") : null;
+    const v = p?.variants.find((x) => x.id === it.variantId);
+    if (!p || !v) return { ok: false as const, code: "item_unavailable", message: "One of the items is no longer available" };
+    if (v.stock < it.quantity) return { ok: false as const, code: "out_of_stock", message: `Not enough stock for ${p.name}` };
+    items.push({ variantId: v.id, productSlug: p.slug, name: p.name, size: v.size, color: v.color, unitPrice: v.price, quantity: it.quantity, lineTotal: v.price * it.quantity });
+  }
+  const subtotal = items.reduce((n, i) => n + i.lineTotal, 0);
+  const w = wilayas.find((x) => x.code === input.wilayaCode);
+  if (!w) return { ok: false as const, code: "invalid_wilaya", message: "Delivery is not available to this wilaya" };
+  const freeShipping = subtotal >= 10000;
+  const shippingFee = freeShipping ? 0 : input.deliveryType === "desk" ? w.desk : w.home;
+  const code = input.discountCode?.trim().toUpperCase();
+  let discount: OrderQuote["discount"] = null;
+  if (code) {
+    if (code !== "WELCOME10") return { ok: false as const, code: "invalid_code", message: "This discount code is not valid" };
+    if (subtotal < 3000) return { ok: false as const, code: "code_min_subtotal", message: "This code needs a minimum order of 3000 DA" };
+    discount = { code, amount: Math.floor(subtotal / 10) };
+  }
+  const discountTotal = discount?.amount ?? 0;
+  return { ok: true as const, value: { items, subtotal, shippingFee, freeShipping, discountTotal, discount, total: subtotal + shippingFee - discountTotal } satisfies OrderQuote };
+}
+
 export const mockApi: StoreApi = {
   getHome: (locale) =>
     delay<HomeContent>({
@@ -265,4 +309,36 @@ export const mockApi: StoreApi = {
         en: "Free delivery from 10,000 DA · Cash on delivery in 58 wilayas",
       }[locale],
     }),
+
+  getWilayas: (locale) => delay(wilayas.map((w) => ({ code: w.code, name: locale === "ar" ? w.ar : w.fr, homeFee: w.home, deskFee: w.desk })) as Wilaya[]),
+
+  getCommunes: (code, locale) =>
+    delay(
+      Array.from({ length: 6 }, (_, i): Commune => ({
+        id: code * 100 + i,
+        name: locale === "ar" ? `بلدية ${i + 1}` : `Commune ${i + 1}`,
+        daira: null,
+      })),
+    ),
+
+  getShippingRules: () => delay({ freeShippingOver: 10000 }),
+
+  quote: (input) => delay(priceMock(input)),
+
+  createOrder: async (body) => {
+    const priced = priceMock(body);
+    if (!priced.ok) return priced;
+    const orders = mockOrders();
+    const orderNumber = 1001 + orders.size;
+    const token = crypto.randomUUID();
+    orders.set(`${orderNumber}:${token}`, {
+      orderNumber, status: "pending", paymentMethod: "cod", paymentStatus: "unpaid", deliveryType: body.deliveryType,
+      wilaya: wilayas.find((w) => w.code === body.wilayaCode)?.ar ?? "", subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee,
+      discountTotal: priced.value.discountTotal, total: priced.value.total, trackingNumber: null, createdAt: new Date().toISOString(),
+      items: priced.value.items.map(({ name, size, color, unitPrice, quantity, lineTotal }) => ({ name, size, color, unitPrice, quantity, lineTotal })),
+    });
+    return { ok: true, value: { orderNumber, token, status: "pending", paymentMethod: "cod", subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee, discountTotal: priced.value.discountTotal, total: priced.value.total } };
+  },
+
+  getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
 };
