@@ -15,7 +15,10 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    remotePatterns: [{ protocol: "https", hostname: "*.supabase.co" }],
+    // Uploaded images live on Cloudflare R2: set NEXT_PUBLIC_IMAGE_HOST to its public host (e.g. images.yourstore.dz).
+    remotePatterns: process.env.NEXT_PUBLIC_IMAGE_HOST ? [{ protocol: "https", hostname: process.env.NEXT_PUBLIC_IMAGE_HOST }] : [],
+    // Image URLs are immutable (random keys), so optimised copies can be cached for a month.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
 };
 
