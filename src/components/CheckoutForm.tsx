@@ -13,7 +13,7 @@ import { BagIcon } from "./icons";
 
 const field = "h-12 w-full rounded-xl bg-mist px-4 text-sm outline-none transition placeholder:text-muted focus:bg-paper focus:ring-2 focus:ring-ink/15";
 
-export function CheckoutForm({ wilayas, rules }: { wilayas: Wilaya[]; rules: ShippingRules }) {
+export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilaya[]; rules: ShippingRules; cardAvailable: boolean }) {
   const t = useTranslations("checkout");
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -24,6 +24,7 @@ export function CheckoutForm({ wilayas, rules }: { wilayas: Wilaya[]; rules: Shi
   const [communes, setCommunes] = useState<Commune[]>([]);
   const [communeId, setCommuneId] = useState("");
   const [deliveryType, setDeliveryType] = useState<"home" | "desk">("home");
+  const [method, setMethod] = useState<"cod" | "chargily">("cod");
   const [code, setCode] = useState("");
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
   const [quote, setQuote] = useState<OrderQuote | null>(null);
@@ -74,11 +75,14 @@ export function CheckoutForm({ wilayas, rules }: { wilayas: Wilaya[]; rules: Shi
         wilayaCode: Number(wilayaCode),
         deliveryType,
         discountCode: appliedCode,
-        paymentMethod: "cod",
+        paymentMethod: method,
+        locale,
         customer: { name: String(f.get("name")), phone: String(f.get("phone")), communeId: Number(communeId), address: String(f.get("address")) },
       });
       if (!r.ok) return setError(errorText(r.code));
       cart.clear();
+      // Card payment: the customer pays on the payment company's page, which sends them back to the order page.
+      if (r.value.checkoutUrl) return void window.location.assign(r.value.checkoutUrl);
       router.push(`/order/${r.value.orderNumber}?t=${r.value.token}`);
     });
   }
@@ -178,13 +182,22 @@ export function CheckoutForm({ wilayas, rules }: { wilayas: Wilaya[]; rules: Shi
 
         <fieldset className="space-y-3">
           <legend className="label mb-2">{t("payment")}</legend>
-          <div className="rounded-2xl border border-ink bg-mist p-4">
-            <p className="text-sm font-semibold">{t("cod")}</p>
-            <p className="mt-0.5 text-[11px] text-muted">{t("codHint")}</p>
-          </div>
-          <div className="rounded-2xl border border-dashed border-line p-4 text-sm text-muted" aria-disabled>
-            {t("cardSoon")}
-          </div>
+          <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-4 transition has-[:checked]:border-ink has-[:checked]:bg-mist">
+            <input type="radio" name="method" value="cod" checked={method === "cod"} onChange={() => setMethod("cod")} className="mt-1 size-4 accent-ink" />
+            <span>
+              <span className="block text-sm font-semibold">{t("cod")}</span>
+              <span className="mt-0.5 block text-[11px] text-muted">{t("codHint")}</span>
+            </span>
+          </label>
+          {cardAvailable ? (
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line p-4 transition has-[:checked]:border-ink has-[:checked]:bg-mist">
+              <input type="radio" name="method" value="chargily" checked={method === "chargily"} onChange={() => setMethod("chargily")} className="mt-1 size-4 accent-ink" />
+              <span>
+                <span className="block text-sm font-semibold">{t("card")}</span>
+                <span className="mt-0.5 block text-[11px] text-muted">{t("cardHint")}</span>
+              </span>
+            </label>
+          ) : null}
         </fieldset>
       </div>
 
@@ -239,9 +252,9 @@ export function CheckoutForm({ wilayas, rules }: { wilayas: Wilaya[]; rules: Shi
             disabled={pending || !quote || !communeId}
             className="h-12 w-full rounded-full bg-ink text-xs font-bold uppercase tracking-wide text-paper transition hover:bg-ink/85 active:scale-[.99] disabled:bg-muted"
           >
-            {pending ? t("placing") : t("place")}
+            {pending ? t("placing") : method === "chargily" ? t("payNow") : t("place")}
           </button>
-          <p className="text-center text-[11px] text-muted">{t("callNote")}</p>
+          <p className="text-center text-[11px] text-muted">{method === "chargily" ? t("cardNote") : t("callNote")}</p>
         </div>
       </aside>
     </form>

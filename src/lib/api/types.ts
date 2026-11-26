@@ -25,6 +25,7 @@ export type SiteSettings = S["Site"];
 export type Wilaya = S["Wilaya"];
 export type Commune = S["Commune"];
 export type ShippingRules = S["ShippingRules"];
+export type PaymentMethods = S["PaymentMethods"];
 export type OrderQuote = S["OrderQuote"];
 export type OrderCreated = S["OrderCreated"];
 export type OrderView = S["OrderView"];
@@ -53,6 +54,7 @@ export interface StoreApi {
   getWilayas(locale: Locale): Promise<Wilaya[]>;
   getCommunes(wilayaCode: number, locale: Locale): Promise<Commune[]>;
   getShippingRules(): Promise<ShippingRules>;
+  getPaymentMethods(): Promise<PaymentMethods>;
   quote(input: QuoteInput): Promise<Result<OrderQuote>>;
   createOrder(body: CreateOrderBody): Promise<Result<OrderCreated>>;
   getOrder(orderNumber: number, token: string, locale: Locale): Promise<OrderView | null>;

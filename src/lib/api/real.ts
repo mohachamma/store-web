@@ -41,6 +41,7 @@ export const realApi: StoreApi = {
   getWilayas: (locale) => must(get<Ret<"getWilayas">>("/shipping/wilayas", locale)),
   getCommunes: (code, locale) => must(get<Ret<"getCommunes">>(`/shipping/wilayas/${code}/communes`, locale)),
   getShippingRules: async () => (await get<Ret<"getShippingRules">>("/shipping/rules", "ar")) ?? { freeShippingOver: null },
+  getPaymentMethods: async () => (await get<Ret<"getPaymentMethods">>("/payments/methods", "ar")) ?? { cod: true, card: false },
   quote: (input) => post("/orders/quote", input),
   createOrder: (body) => post("/orders", body),
   // An order page must always show the current status: never cached.

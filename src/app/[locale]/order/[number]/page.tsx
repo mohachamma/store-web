@@ -35,7 +35,12 @@ export default async function OrderPage({ params, searchParams }: Props) {
           <p className="text-sm text-muted">
             {t("number")} <strong className="text-ink" dir="ltr">#{order.orderNumber}</strong> · {t("keep")}
           </p>
-          <p className="mx-auto max-w-md text-sm">{t("callNote")}</p>
+          <p className="mx-auto max-w-md text-sm">{order.paymentMethod === "chargily" ? t("cardCallNote") : t("callNote")}</p>
+          {order.paymentMethod === "chargily" && order.status === "pending" ? (
+            <p role="status" className={`mx-auto max-w-md rounded-xl px-4 py-3 text-sm ${order.paymentStatus === "paid" ? "bg-emerald-50 text-emerald-800" : "bg-mist"}`}>
+              {t(`pay.${order.paymentStatus}`)}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-4 rounded-[var(--radius-card)] border border-line p-5">
@@ -68,7 +73,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
             {order.discountTotal > 0 ? <div className="flex justify-between"><dt>{t("discount")}</dt><dd className="text-ink">-<Price value={order.discountTotal} /></dd></div> : null}
             <div className="flex justify-between border-t border-line pt-3 text-base font-semibold text-ink"><dt>{t("total")}</dt><dd><Price value={order.total} /></dd></div>
           </dl>
-          <p className="text-[11px] text-muted">{t("payment")}</p>
+          <p className="text-[11px] text-muted">{order.paymentMethod === "chargily" ? t("paymentCard") : t("payment")}</p>
         </div>
 
         <div className="text-center">

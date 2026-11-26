@@ -12,12 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CheckoutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [wilayas, rules] = await Promise.all([api.getWilayas(locale), api.getShippingRules()]);
+  const [wilayas, rules, methods] = await Promise.all([api.getWilayas(locale), api.getShippingRules(), api.getPaymentMethods()]);
   return (
     <>
       <Header variant="detail" />
       <main>
-        <CheckoutForm wilayas={wilayas} rules={rules} />
+        <CheckoutForm wilayas={wilayas} rules={rules} cardAvailable={methods.card} />
       </main>
     </>
   );

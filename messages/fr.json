@@ -113,7 +113,6 @@
     "payment": "Paiement",
     "cod": "Paiement à la livraison",
     "codHint": "Vous payez en espèces à la réception.",
-    "cardSoon": "Carte CIB / Edahabia — bientôt",
     "code": "Code promo",
     "codePlaceholder": "Saisir le code",
     "codeApply": "Appliquer",
@@ -142,8 +141,14 @@
       "invalid_wilaya": "Livraison indisponible pour cette wilaya.",
       "rate_limited": "Trop de commandes avec ce numéro. Réessayez plus tard ou contactez-nous.",
       "validation_error": "Vérifiez les informations saisies.",
-      "generic": "Impossible d'envoyer la commande. Réessayez."
-    }
+      "generic": "Impossible d'envoyer la commande. Réessayez.",
+      "payment_unavailable": "Le paiement par carte n'est pas disponible. Choisissez le paiement à la livraison.",
+      "payment_failed": "Impossible de démarrer le paiement par carte. Réessayez ou choisissez le paiement à la livraison."
+    },
+    "card": "Carte CIB / Edahabia",
+    "cardHint": "Payez maintenant en toute sécurité via Chargily.",
+    "payNow": "Payer maintenant",
+    "cardNote": "Vous serez redirigé vers la page de paiement sécurisée, puis nous vous appelons pour confirmer."
   },
   "order": {
     "title": "Merci ! Votre commande est reçue",
@@ -169,6 +174,15 @@
     "discount": "Réduction",
     "total": "Total",
     "payment": "Paiement à la livraison",
-    "continue": "Continuer mes achats"
+    "continue": "Continuer mes achats",
+    "cardCallNote": "Nous vous appellerons bientôt pour confirmer la commande, puis nous l'expédions.",
+    "paymentCard": "Paiement par carte (CIB / Edahabia)",
+    "pay": {
+      "paid": "Paiement réussi. Merci !",
+      "pending": "En attente de confirmation du paiement… actualisez la page dans un instant.",
+      "unpaid": "Le paiement n'est pas terminé. Nous vous contacterons.",
+      "failed": "Le paiement n'a pas abouti. Nous vous appellerons pour finaliser.",
+      "refunded": "Le montant a été remboursé."
+    }
   }
 }
