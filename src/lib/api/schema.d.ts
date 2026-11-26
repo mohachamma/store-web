@@ -325,6 +325,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/catalog/filters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** What the filter panel can offer for a search (categories, sizes, colors, price range) and how many products match */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Language of names and descriptions. Falls back to Arabic when a translation is missing. */
+                    locale?: "ar" | "fr" | "en";
+                    /** @description Search in product names (any language) */
+                    q?: string;
+                    /** @description Category slug */
+                    category?: string;
+                    size?: string;
+                    color?: string;
+                    minPrice?: number | null;
+                    maxPrice?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CatalogFilters"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/catalog/products/{slug}": {
         parameters: {
             query?: never;
@@ -6623,6 +6670,20 @@ export interface components {
             heroImage: components["schemas"]["Image"];
             looks: components["schemas"]["Look"][];
             rows: components["schemas"]["CategoryRow"][];
+        };
+        CatalogFilters: {
+            total: number;
+            categories: {
+                slug: string;
+                name: string;
+                count: number;
+            }[];
+            sizes: string[];
+            colors: string[];
+            priceRange: {
+                min: number;
+                max: number;
+            } | null;
         };
         Product: components["schemas"]["ProductSummary"] & {
             description: string;

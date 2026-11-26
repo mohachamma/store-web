@@ -42,13 +42,22 @@ async function getAuthed<R>(path: string, token: string, params: Record<string, 
   return (await res.json()) as R;
 }
 
+const num = (n?: number) => (n === undefined ? undefined : String(n));
+/** Query-string parameters for the list / filters endpoints (sort and paging only apply to the list). */
+function listParams(q: import("./types").ProductQuery, paged: boolean): Record<string, string | undefined> {
+  const p: Record<string, string | undefined> = { q: q.q, category: q.category, size: q.size, color: q.color, minPrice: num(q.minPrice), maxPrice: num(q.maxPrice) };
+  if (paged) Object.assign(p, { sort: q.sort, limit: num(q.limit), offset: num(q.offset) });
+  return p;
+}
+
 type Ret<K extends keyof StoreApi> = Awaited<ReturnType<StoreApi[K]>>;
 
 export const realApi: StoreApi = {
   getHome: (locale) => must(get<Ret<"getHome">>("/catalog/home", locale)),
   getCollection: (slug, locale) => get<Ret<"getCollection">>(`/catalog/collections/${encodeURIComponent(slug)}`, locale),
   getProduct: (slug, locale) => get<Ret<"getProduct">>(`/catalog/products/${encodeURIComponent(slug)}`, locale),
-  listProducts: (query, locale) => must(get<Ret<"listProducts">>("/catalog/products", locale, { q: query.q, category: query.category })),
+  listProducts: (query, locale) => must(get<Ret<"listProducts">>("/catalog/products", locale, listParams(query, true))),
+  getFilters: (query, locale) => must(get<Ret<"getFilters">>("/catalog/filters", locale, listParams(query, false))),
   getRelated: (slug, locale) => must(get<Ret<"getRelated">>(`/catalog/products/${encodeURIComponent(slug)}/related`, locale)),
   getSale: (locale) => must(get<Ret<"getSale">>("/catalog/sale", locale)),
   getSite: (locale) => must(get<Ret<"getSite">>("/catalog/site", locale)),
