@@ -60,6 +60,7 @@ export const realApi: StoreApi = {
   createOrder: (body, token) => post("/orders", body, token),
   // An order page must always show the current status: never cached.
   getOrder: (n, token, locale) => get<Ret<"getOrder">>(`/orders/${n}`, locale, { token }, { fresh: true }),
+  subscribeNewsletter: (email) => post("/newsletter", { email }),
   login: (email, password) => post("/auth/login", { email, password }),
   register: (input) => post("/auth/register", input),
   getMe: (token) => getAuthed<Ret<"getMe">>("/me", token) as Promise<Ret<"getMe">>,

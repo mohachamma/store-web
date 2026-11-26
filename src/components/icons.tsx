@@ -94,3 +94,40 @@ export const TruckIcon = (p: P) => (
     <circle cx="17" cy="17.5" r="1.6" />
   </svg>
 );
+
+export const ShieldIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M12 3.5 5 6v5.5c0 4.2 2.8 7.2 7 9 4.2-1.8 7-4.8 7-9V6l-7-2.5Z" />
+    <path d="m9 12 2.2 2.2L15 10.3" />
+  </svg>
+);
+export const RefreshIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M19 8a7.5 7.5 0 0 0-13-1.5M5 4v3.2h3.2M5 16a7.5 7.5 0 0 0 13 1.5M19 20v-3.2h-3.2" />
+  </svg>
+);
+export const HeadsetIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M4.5 13v-1.5a7.5 7.5 0 0 1 15 0V13" />
+    <rect x="3.5" y="12.5" width="3.5" height="5.5" rx="1.5" />
+    <rect x="17" y="12.5" width="3.5" height="5.5" rx="1.5" />
+    <path d="M18.5 18c0 1.4-1.6 2.5-4 2.5" />
+  </svg>
+);
+export const CardIcon = (p: P) => (
+  <svg {...base(p)}>
+    <rect x="3" y="5.5" width="18" height="13" rx="2.2" />
+    <path d="M3 10h18M7 15h3" />
+  </svg>
+);
+export const GiftIcon = (p: P) => (
+  <svg {...base(p)}>
+    <rect x="3.5" y="9" width="17" height="11" rx="1.5" />
+    <path d="M12 9v11M3.5 13h17M12 9c-2.8 0-4.5-1-4.5-2.6S9.2 4 12 7c2.8-3 4.5-1.6 4.5-.6S14.8 9 12 9Z" />
+  </svg>
+);
+export const StarIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="m12 4 2.4 5 5.4.7-4 3.7 1 5.4L12 16.2 7.2 18.8l1-5.4-4-3.7 5.4-.7L12 4Z" />
+  </svg>
+);

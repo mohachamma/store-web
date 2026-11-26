@@ -1,12 +1,15 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BrandsMarquee } from "@/components/BrandsMarquee";
+import { CategoryCards } from "@/components/CategoryCards";
 import { Header } from "@/components/Header";
 import { HeroCard } from "@/components/HeroCard";
 import { LookCard } from "@/components/LookCard";
+import { NewsletterBlock } from "@/components/NewsletterBlock";
 import { OfferBanner } from "@/components/OfferBanner";
 import { ProductCard } from "@/components/ProductCard";
 import { Row } from "@/components/Row";
 import { SearchField } from "@/components/SearchField";
+import { WhyUs } from "@/components/WhyUs";
 import type { Locale } from "@/i18n/routing";
 import { api } from "@/lib/api";
 
@@ -26,6 +29,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           </div>
         ) : null}
         <BrandsMarquee brands={home.brands} strip={home.brandsStrip} />
+        <CategoryCards cards={home.categoryCards} />
         {home.rows.slice(0, 1).map((row) => (
           <Row key={row.category.slug} title={row.category.name} href={`/search?category=${row.category.slug}`} viewAll={t("viewAll")}>
             {row.products.map((p, i) => (
@@ -48,6 +52,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         {home.offers.map((offer) => (
           <OfferBanner key={offer.id} offer={offer} />
         ))}
+        {home.whyUs ? <WhyUs data={home.whyUs} /> : null}
+        {home.newsletter ? <NewsletterBlock data={home.newsletter} /> : null}
       </main>
     </>
   );

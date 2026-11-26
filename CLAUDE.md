@@ -69,7 +69,7 @@ Any content shown in the storefront must be editable from the dashboard. For eve
 - [x] Checkout + cash on delivery (2026-11-26): `/checkout` (name, phone, wilaya + commune, address, home/desk, promo code, server-priced summary), `/order/{number}?t=token` confirmation page (no personal data). Only variant ids and quantities are sent; the API computes every price. Card payment (Chargily) comes later.
 - [x] Card payment (2026-11-28): checkout offers CIB / Edahabia when `GET /payments/methods` says `card: true`; the API returns `checkoutUrl` and the customer is redirected to Chargily, then back to `/order/{number}?t=…` which shows the payment status (paid / waiting / failed). Cash on delivery unchanged.
 - [x] Customer accounts (2026-11-29): `/account` (sign in / register, profile, order history), session in an httpOnly cookie (`src/lib/session.ts`), favorites copied to the account on sign-in and synced from it on the favorites page, checkout pre-filled and the order linked to the account when signed in. Guests unchanged.
-- [ ] Phase 2 — remaining home sections ("why us", category cards, newsletter) for desktop — each with API fields + dashboard screen
+- [x] Home sections (2026-11-29): category cards, "why us" and newsletter on the home page, all from `GET /catalog/home` (`categoryCards`, `whyUs`, `newsletter`) and edited in the dashboard; sign-up via `POST /newsletter`.
 - [ ] Phase 3 — category pages with filters/sort
 
 ## Needs from API
