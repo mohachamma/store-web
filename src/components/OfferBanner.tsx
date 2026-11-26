@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import type { Offer } from "@/lib/api/types";
+import { AppLink } from "./AppLink";
 import { Countdown } from "./Countdown";
 import { ChevronIcon } from "./icons";
 
@@ -29,7 +29,7 @@ export function OfferBanner({ offer }: { offer: Offer }) {
           </h2>
           {offer.countdownEndsAt ? <Countdown endsAt={offer.countdownEndsAt} /> : null}
           {offer.href && offer.ctaLabel ? (
-            <Link
+            <AppLink
               href={offer.href}
               className={`mt-1 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-xs font-bold transition active:scale-[.98] ${
                 dark ? "bg-paper text-ink hover:bg-paper/90" : "bg-ink text-paper hover:bg-ink/85"
@@ -37,7 +37,7 @@ export function OfferBanner({ offer }: { offer: Offer }) {
             >
               {offer.ctaLabel}
               <ChevronIcon size={14} />
-            </Link>
+            </AppLink>
           ) : null}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Brand, BrandsStrip } from "@/lib/api/types";
-import { Link } from "@/i18n/navigation";
+import { AppLink } from "./AppLink";
 
 /**
  * Brands strip. Everything is controlled from the dashboard: which brands, their order,
@@ -20,9 +20,9 @@ export function BrandsMarquee({ brands, strip }: { brands: Brand[]; strip: Brand
       />
     );
     return b.href ? (
-      <Link href={b.href} className="block" aria-label={b.name}>
+      <AppLink href={b.href} className="block" aria-label={b.name}>
         {img}
-      </Link>
+      </AppLink>
     ) : (
       img
     );

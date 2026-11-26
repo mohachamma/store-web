@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { ViewTransition } from "react";
-import { Link } from "@/i18n/navigation";
-import type { HomeContent } from "@/lib/api/types";
+import type { Hero } from "@/lib/api/types";
+import { AppLink } from "./AppLink";
 
-export function HeroCard({ hero, cta }: { hero: HomeContent["hero"]; cta: string }) {
+export function HeroCard({ hero, cta }: { hero: Hero; cta: string }) {
   return (
     <div className="mx-auto max-w-6xl px-4 md:px-6">
-      <Link
-        href={`/collections/${hero.collectionSlug}`}
+      <AppLink
+        href={hero.href ?? "/"}
         className="group relative block aspect-[16/11] overflow-hidden rounded-[var(--radius-card)] bg-mist transition-transform duration-200 ease-out active:scale-[.98] md:aspect-[21/9]"
       >
         <ViewTransition name="collection-hero" share="morph" default="none">
@@ -22,7 +22,7 @@ export function HeroCard({ hero, cta }: { hero: HomeContent["hero"]; cta: string
         </ViewTransition>
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 p-5 text-center text-paper md:items-start md:p-10 md:text-start">
-          <p className="text-[11px] opacity-90">{hero.subtitle}</p>
+          {hero.subtitle ? <p className="text-[11px] opacity-90">{hero.subtitle}</p> : null}
           <ViewTransition name="collection-title" share="morph" default="none">
             <h1 className="font-display text-2xl uppercase tracking-[0.12em] md:text-5xl">{hero.title}</h1>
           </ViewTransition>
@@ -30,7 +30,7 @@ export function HeroCard({ hero, cta }: { hero: HomeContent["hero"]; cta: string
             {cta}
           </span>
         </div>
-      </Link>
+      </AppLink>
     </div>
   );
 }

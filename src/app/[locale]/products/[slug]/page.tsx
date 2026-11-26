@@ -14,10 +14,14 @@ type Props = { params: Promise<{ locale: Locale; slug: string }> };
 // Pre-render product pages so they are ready (and prefetched) when a card is tapped:
 // this is what lets the photo morph from the card into the gallery.
 export async function generateStaticParams() {
-  const perLocale = await Promise.all(
-    routing.locales.map(async (locale) => (await api.listProducts({}, locale)).map((p) => ({ locale, slug: p.slug }))),
-  );
-  return perLocale.flat();
+  try {
+    const perLocale = await Promise.all(
+      routing.locales.map(async (locale) => (await api.listProducts({}, locale)).map((p) => ({ locale, slug: p.slug }))),
+    );
+    return perLocale.flat();
+  } catch {
+    return []; // API not reachable at build time: pages are rendered on demand instead
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -10,7 +10,6 @@ import type {
   Offer,
   Product,
   ProductSummary,
-  Size,
   StoreApi,
 } from "./types";
 
@@ -33,11 +32,11 @@ interface Seed {
   compareAt?: number;
   isNew?: boolean;
   shoes?: boolean;
-  soldOut?: Size[];
+  soldOut?: string[];
 }
 
-const APPAREL: Size[] = ["XS", "S", "M", "L", "XL"];
-const SHOES: Size[] = ["40", "41", "42", "43", "44"];
+const APPAREL: string[] = ["XS", "S", "M", "L", "XL"];
+const SHOES: string[] = ["40", "41", "42", "43", "44"];
 
 const seeds: Seed[] = [
   { slug: "nylon-zip-hoodie", art: "hoodie-stone", category: "outerwear", price: 7900, isNew: true,
@@ -190,6 +189,7 @@ export const mockApi: StoreApi = {
         title: { ar: "تشكيلة الشتاء", fr: "Collection hiver", en: "Winter Collection" }[locale],
         subtitle: { ar: "قطع دافئة بخطوط بسيطة", fr: "Des pièces chaudes aux lignes simples", en: "Warm pieces, simple lines" }[locale],
         image: { url: "/placeholders/hero-1.svg", alt: "" },
+        href: "/collections/winter",
         collectionSlug: "winter",
       },
       looks: looks(locale),
