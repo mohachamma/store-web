@@ -206,5 +206,11 @@
       "failed": "Le paiement n'a pas abouti. Nous vous appellerons pour finaliser.",
       "refunded": "Le montant a été remboursé."
     }
+  },
+  "newsletter": {
+    "email": "Votre e-mail",
+    "thanks": "Merci ! Votre e-mail est enregistré.",
+    "error": "Inscription impossible. Vérifiez l'e-mail et réessayez.",
+    "privacy": "Nous utilisons votre e-mail uniquement pour nos nouveautés ; vous pouvez demander sa suppression à tout moment."
   }
 }

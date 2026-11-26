@@ -29,6 +29,9 @@ export type PaymentMethods = S["PaymentMethods"];
 export type LoginResult = S["LoginResult"];
 export type RegisterResult = S["RegisterResult"];
 export type MeProfile = S["MeProfile"];
+export type WhyUs = S["WhyUs"];
+export type CategoryCard = S["CategoryCard"];
+export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
 export type OrderQuote = S["OrderQuote"];
@@ -67,6 +70,7 @@ export interface StoreApi {
   // Customer accounts (the token is the access token kept in the httpOnly cookie).
   login(email: string, password: string): Promise<Result<LoginResult>>;
   register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
+  subscribeNewsletter(email: string): Promise<Result<{ ok: true }>>;
   getMe(token: string): Promise<MeProfile | null>;
   updateMe(token: string, input: { name: string | null; phone: string | null }): Promise<Result<MeProfile>>;
   getMyOrders(token: string): Promise<MyOrder[] | null>;

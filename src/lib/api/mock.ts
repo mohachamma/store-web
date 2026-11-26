@@ -247,6 +247,24 @@ export const mockApi: StoreApi = {
         title: { ar: "علاماتنا التجارية", fr: "Nos marques", en: "Our brands" }[locale],
       },
       offers: offers(locale),
+      whyUs: {
+        title: { ar: "لماذا نحن", fr: "Pourquoi nous", en: "Why shop with us" }[locale],
+        items: [
+          { icon: "truck", title: { ar: "توصيل إلى 58 ولاية", fr: "Livraison dans 58 wilayas", en: "Delivery to 58 wilayas" }[locale], text: null },
+          { icon: "card", title: { ar: "ادفع عند الاستلام", fr: "Paiement à la livraison", en: "Pay on delivery" }[locale], text: null },
+          { icon: "refresh", title: { ar: "تبديل سهل", fr: "Échange facile", en: "Easy exchanges" }[locale], text: null },
+          { icon: "headset", title: { ar: "خدمة زبائن", fr: "Service client", en: "Customer care" }[locale], text: null },
+        ],
+      },
+      categoryCards: [
+        { id: "hc1", title: { ar: "رجال", fr: "Homme", en: "Men" }[locale], subtitle: null, image: { url: "/placeholders/hoodie-black-1.svg", alt: "" }, href: "/search?category=outerwear" },
+        { id: "hc2", title: { ar: "كاجوال", fr: "Casual", en: "Casual" }[locale], subtitle: null, image: { url: "/placeholders/tee-cream-1.svg", alt: "" }, href: "/search?category=tops" },
+      ],
+      newsletter: {
+        title: { ar: "كن أول من يعلم", fr: "Soyez les premiers informés", en: "Be the first to know" }[locale],
+        subtitle: { ar: "اترك بريدك لتصلك العروض.", fr: "Laissez votre e-mail.", en: "Leave your email." }[locale],
+        button: { ar: "اشترك", fr: "S'abonner", en: "Subscribe" }[locale],
+      },
     }),
 
   getCollection: (slug, locale) =>
@@ -343,6 +361,8 @@ export const mockApi: StoreApi = {
   },
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
+
+  subscribeNewsletter: async () => ({ ok: true, value: { ok: true } }),
 
   // Accounts in mock mode: any credentials work; data lives in memory for the session of the dev server.
   login: async (email) => ({ ok: true, value: { accessToken: `mock:${email}`, expiresIn: 3600, user: { id: "mock-user", email, role: "customer" } } }),
