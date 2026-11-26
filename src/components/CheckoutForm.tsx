@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { communesAction, placeOrderAction, quoteAction } from "@/app/[locale]/checkout/actions";
+import { checkoutProfileAction, communesAction, placeOrderAction, quoteAction } from "@/app/[locale]/checkout/actions";
 import type { Commune, OrderQuote, ShippingRules, Wilaya } from "@/lib/api/types";
 import { cart, cartSubtotal, useCart } from "@/lib/cart";
 import { formatDZD } from "@/lib/format";
@@ -30,6 +30,12 @@ export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilay
   const [quote, setQuote] = useState<OrderQuote | null>(null);
   const [codeError, setCodeError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [profile, setProfile] = useState<{ name: string; phone: string } | null>(null);
+
+  // Signed in: pre-fill name and phone from the account (guests see empty fields).
+  useEffect(() => {
+    void checkoutProfileAction().then(setProfile).catch(() => undefined);
+  }, []);
 
   const errorText = (c: string) => (t.has(`errors.${c}`) ? t(`errors.${c}`) : t("errors.generic"));
   const items = lines.map((l) => ({ variantId: l.variantId, quantity: l.qty }));
@@ -116,11 +122,11 @@ export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilay
           <h2 id="c-contact" className="label">{t("contact")}</h2>
           <div>
             <label className={label} htmlFor="name">{t("name")}</label>
-            <input id="name" name="name" required minLength={2} maxLength={80} autoComplete="name" className={field} />
+            <input id="name" name="name" key={`n-${profile?.name ?? ""}`} defaultValue={profile?.name ?? ""} required minLength={2} maxLength={80} autoComplete="name" className={field} />
           </div>
           <div>
             <label className={label} htmlFor="phone">{t("phone")}</label>
-            <input id="phone" name="phone" required type="tel" inputMode="tel" autoComplete="tel" dir="ltr" placeholder="05 50 12 34 56" className={`${field} text-start`} />
+            <input id="phone" name="phone" key={`p-${profile?.phone ?? ""}`} defaultValue={profile?.phone ?? ""} required type="tel" inputMode="tel" autoComplete="tel" dir="ltr" placeholder="05 50 12 34 56" className={`${field} text-start`} />
             <p className="mt-1 text-[11px] text-muted">{t("phoneHint")}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">

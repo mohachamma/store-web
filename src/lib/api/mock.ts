@@ -343,4 +343,14 @@ export const mockApi: StoreApi = {
   },
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
+
+  // Accounts in mock mode: any credentials work; data lives in memory for the session of the dev server.
+  login: async (email) => ({ ok: true, value: { accessToken: `mock:${email}`, expiresIn: 3600, user: { id: "mock-user", email, role: "customer" } } }),
+  register: async ({ email }) => ({ ok: true, value: { confirmationRequired: false, session: { accessToken: `mock:${email}`, expiresIn: 3600, user: { id: "mock-user", email, role: "customer" } } } }),
+  getMe: async (token) => (token.startsWith("mock:") ? { id: "mock-user", email: token.slice(5), name: "Mock Customer", phone: null } : null),
+  updateMe: async (token, input) => ({ ok: true, value: { id: "mock-user", email: token.slice(5), name: input.name, phone: input.phone } }),
+  getMyOrders: async () => [],
+  getMyFavorites: async () => ({ ids: [], products: [] }),
+  mergeFavorites: async () => ({ ids: [], products: [] }),
+  setFavorite: async () => {},
 };

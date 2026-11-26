@@ -21,11 +21,25 @@ async function must<R>(p: Promise<R | null>): Promise<R> {
   return v;
 }
 
-async function post<R>(path: string, body: unknown): Promise<{ ok: true; value: R } | { ok: false; code: string; message: string }> {
-  const res = await fetch(`${BASE}${path}`, { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+async function send<R>(method: string, path: string, body: unknown, token?: string | null): Promise<{ ok: true; value: R } | { ok: false; code: string; message: string }> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${BASE}${path}`, { method, cache: "no-store", headers, body: body === undefined ? undefined : JSON.stringify(body) });
   if (res.ok) return { ok: true, value: (await res.json()) as R };
   const err = (await res.json().catch(() => null)) as { error?: { code?: string; message?: string } } | null;
   return { ok: false, code: err?.error?.code ?? `http_${res.status}`, message: err?.error?.message ?? "Request failed" };
+}
+
+const post = <R>(path: string, body: unknown, token?: string | null) => send<R>("POST", path, body, token);
+
+/** Signed-in GET: always fresh; null when the token is not (or no longer) valid. */
+async function getAuthed<R>(path: string, token: string, params: Record<string, string> = {}): Promise<R | null> {
+  const url = new URL(`${BASE}${path}`);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+  const res = await fetch(url, { cache: "no-store", headers: { Authorization: `Bearer ${token}` } });
+  if (res.status === 401) return null;
+  if (!res.ok) throw new Error(`API ${res.status} on ${path}`);
+  return (await res.json()) as R;
 }
 
 type Ret<K extends keyof StoreApi> = Awaited<ReturnType<StoreApi[K]>>;
@@ -43,7 +57,18 @@ export const realApi: StoreApi = {
   getShippingRules: async () => (await get<Ret<"getShippingRules">>("/shipping/rules", "ar")) ?? { freeShippingOver: null },
   getPaymentMethods: async () => (await get<Ret<"getPaymentMethods">>("/payments/methods", "ar")) ?? { cod: true, card: false },
   quote: (input) => post("/orders/quote", input),
-  createOrder: (body) => post("/orders", body),
+  createOrder: (body, token) => post("/orders", body, token),
   // An order page must always show the current status: never cached.
   getOrder: (n, token, locale) => get<Ret<"getOrder">>(`/orders/${n}`, locale, { token }, { fresh: true }),
+  login: (email, password) => post("/auth/login", { email, password }),
+  register: (input) => post("/auth/register", input),
+  getMe: (token) => getAuthed<Ret<"getMe">>("/me", token) as Promise<Ret<"getMe">>,
+  updateMe: async (token, input) => send("PUT", "/me", input, token),
+  getMyOrders: (token) => getAuthed<Ret<"getMyOrders">>("/me/orders", token) as Promise<Ret<"getMyOrders">>,
+  getMyFavorites: (token, locale) => getAuthed<Ret<"getMyFavorites">>("/me/favorites", token, { locale }) as Promise<Ret<"getMyFavorites">>,
+  mergeFavorites: async (token, productIds, locale) => {
+    const r = await send<Ret<"mergeFavorites">>("POST", `/me/favorites/merge?locale=${locale}`, { productIds }, token);
+    return r.ok ? r.value : null;
+  },
+  setFavorite: async (token, productId, on) => void (await send(on ? "PUT" : "DELETE", `/me/favorites/${productId}`, undefined, token)),
 };
