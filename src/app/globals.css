@@ -9,7 +9,8 @@
   --muted: #8a8a8a;
   --accent: #111111;
   --danger: #c0353b;
-  --tabbar-h: 64px;
+  /* Floating tab bar: pill height (64px) + its gap to the screen bottom (12px). The side menu ends exactly at its top. */
+  --tabbar-h: 76px;
 }
 
 @theme inline {
@@ -199,12 +200,12 @@ dialog.drawer[open] {
 }
 /* The glass fades out gradually towards its far edge (no hard line splitting the page). The mask also softens the blur. */
 dialog.drawer {
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 52%, transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 52%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
 }
 [dir="rtl"] dialog.drawer {
-  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 52%, transparent 100%);
-  mask-image: linear-gradient(to left, #000 0%, #000 52%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 42%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, #000 42%, transparent 100%);
 }
 dialog.drawer[open]::backdrop {
   animation: fade-in 0.2s ease;
