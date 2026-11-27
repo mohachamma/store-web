@@ -35,6 +35,7 @@ export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
 export type WomenPage = S["WomenPage"];
+export type MenPage = S["MenPage"];
 export type CollectionLink = S["CollectionLinks"][number];
 export type PageLink = S["PageLinks"][number];
 export type InfoPage = S["InfoPage"];
@@ -91,6 +92,7 @@ export interface StoreApi {
   register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
   getCollections(locale: Locale): Promise<CollectionLink[]>;
   getWomenPage(locale: Locale): Promise<WomenPage>;
+  getMenPage(locale: Locale): Promise<MenPage>;
   getPages(locale: Locale): Promise<PageLink[]>;
   getPage(slug: string, locale: Locale): Promise<InfoPage | null>;
   getStoreInfo(locale: Locale): Promise<StoreInfo>;

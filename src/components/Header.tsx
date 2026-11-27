@@ -18,8 +18,9 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
   const t = await getTranslations("nav");
   // The Women's page link and its label come from the dashboard; hidden while the page is switched off.
   const locale = (await getLocale()) as Locale;
-  const [women, filters, collections, pages] = await Promise.all([
+  const [women, men, filters, collections, pages] = await Promise.all([
     api.getWomenPage(locale).catch(() => null),
+    api.getMenPage(locale).catch(() => null),
     api.getFilters({}, locale).catch(() => null),
     api.getCollections(locale).catch(() => []),
     api.getPages(locale).catch(() => []),
@@ -33,6 +34,7 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
           <MenuDrawer
             data={{
               women: women?.enabled ? { title: women.title } : null,
+              men: men?.enabled ? { title: men.title } : null,
               categories: filters?.categories ?? [],
               collections,
               pages,
@@ -44,6 +46,7 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
             <nav className="hidden items-center gap-6 md:flex" aria-label={t("menu")}>
               <Link href="/" className="label hover:opacity-60">{t("shop")}</Link>
               {women?.enabled ? <Link href="/women" className="label hover:opacity-60">{women.title}</Link> : null}
+              {men?.enabled ? <Link href="/men" className="label hover:opacity-60">{men.title}</Link> : null}
               <Link href="/collections/winter" className="label hover:opacity-60">{t("collections")}</Link>
               <Link href="/sale" className="label text-danger hover:opacity-60">{t("sale")}</Link>
             </nav>

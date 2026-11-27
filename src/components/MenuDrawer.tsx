@@ -11,6 +11,8 @@ import { Wordmark } from "./Wordmark";
 export interface MenuData {
   /** Women's page link (null while the page is switched off in the dashboard). */
   women: { title: string } | null;
+  /** Men's page link (null while the page is switched off). */
+  men: { title: string } | null;
   categories: { slug: string; name: string; count: number }[];
   collections: { slug: string; title: string }[];
   /** Legal / information pages, in the dashboard's order. */
@@ -50,6 +52,7 @@ export function MenuDrawer({ data }: { data: MenuData }) {
             <ul className="mt-4 space-y-0.5">
               <li><Link href="/" className={row}>{t("home")}</Link></li>
               {data.women ? <li><Link href="/women" className={row}>{data.women.title}</Link></li> : null}
+              {data.men ? <li><Link href="/men" className={row}>{data.men.title}</Link></li> : null}
               <li><Link href="/search" className={row}>{t("shop")}</Link></li>
               <li><Link href="/sale" className={`${row} text-danger`}>{t("sale")}</Link></li>
             </ul>
