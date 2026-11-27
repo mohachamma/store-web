@@ -197,6 +197,15 @@ body {
 dialog.drawer[open] {
   animation: drawer-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* The glass fades out gradually towards its far edge (no hard line splitting the page). The mask also softens the blur. */
+dialog.drawer {
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 52%, transparent 100%);
+}
+[dir="rtl"] dialog.drawer {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, #000 52%, transparent 100%);
+}
 dialog.drawer[open]::backdrop {
   animation: fade-in 0.2s ease;
 }
