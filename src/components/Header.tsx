@@ -18,12 +18,11 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
   const t = await getTranslations("nav");
   // The Women's page link and its label come from the dashboard; hidden while the page is switched off.
   const locale = (await getLocale()) as Locale;
-  const [women, men, filters, collections, pages] = await Promise.all([
+  const [women, men, filters, collections] = await Promise.all([
     api.getWomenPage(locale).catch(() => null),
     api.getMenPage(locale).catch(() => null),
     api.getFilters({}, locale).catch(() => null),
     api.getCollections(locale).catch(() => []),
-    api.getPages(locale).catch(() => []),
   ]);
   const iconBtn = "relative grid h-10 w-10 place-items-center rounded-full text-ink transition hover:bg-mist";
 
@@ -37,7 +36,6 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
               men: men?.enabled ? { title: men.title } : null,
               categories: filters?.categories ?? [],
               collections,
-              pages,
             }}
           />
           {variant === "detail" ? (
