@@ -198,12 +198,15 @@ body {
 dialog.drawer[open] {
   animation: menu-in 0.22s ease-out;
 }
-/* Glass with graded transparency: the white tint is strongest at the top and fades towards the bottom, while the blur stays
-   even so the page text behind never competes with the menu entries. */
+/* Glass graded across the menu: clear at the reading-start edge (right in Arabic, left in French/English), so the page shows
+   through, becoming fully opaque at the far edge. The blur stays even so the page text behind never competes with the entries. */
 .menu-glass {
-  background: linear-gradient(to bottom, rgb(255 255 255 / 0.72) 0%, rgb(255 255 255 / 0.4) 50%, rgb(255 255 255 / 0.1) 100%);
+  background: linear-gradient(to right, rgb(255 255 255 / 0.04) 0%, rgb(255 255 255 / 0.5) 55%, rgb(255 255 255 / 1) 100%);
   -webkit-backdrop-filter: blur(22px) saturate(1.5);
   backdrop-filter: blur(22px) saturate(1.5);
+}
+[dir="rtl"] .menu-glass {
+  background: linear-gradient(to left, rgb(255 255 255 / 0.04) 0%, rgb(255 255 255 / 0.5) 55%, rgb(255 255 255 / 1) 100%);
 }
 html {
   scrollbar-gutter: stable;
