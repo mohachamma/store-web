@@ -33,7 +33,7 @@ export function MenuDrawer({ data }: { data: MenuData }) {
         ref={dialog}
         aria-label={t("title")}
         onClick={(e) => e.target === dialog.current && close()}
-        className="drawer m-0 h-svh max-h-svh w-[min(88vw,22rem)] overflow-y-auto border-e border-white/40 bg-paper/60 p-0 text-ink shadow-[0_0_60px_-10px_rgba(0,0,0,.35)] backdrop-blur-2xl backdrop-saturate-150 backdrop:bg-black/25 backdrop:backdrop-blur-[2px] me-auto"
+        className="drawer m-0 h-svh max-h-svh w-1/2 min-w-52 max-w-sm overflow-y-auto border-e border-white/30 bg-paper/30 p-0 text-ink shadow-[0_0_60px_-10px_rgba(0,0,0,.3)] backdrop-blur-xl backdrop-saturate-150 backdrop:bg-black/15 me-auto"
       >
         <div className="flex min-h-full flex-col px-3 pb-8 pt-3">
           <div className="flex items-center justify-between px-1">
