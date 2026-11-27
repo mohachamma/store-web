@@ -198,15 +198,11 @@ body {
 dialog.drawer[open] {
   animation: menu-in 0.22s ease-out;
 }
-/* Glass graded across the menu: clear at the reading-start edge (right in Arabic, left in French/English), so the page shows
-   through, becoming fully opaque at the far edge. The blur stays even so the page text behind never competes with the entries. */
+/* Frosted glass over the whole page: evenly translucent white tint + blur, so the page shows through softly. */
 .menu-glass {
-  background: linear-gradient(to right, rgb(255 255 255 / 0.04) 0%, rgb(255 255 255 / 0.5) 55%, rgb(255 255 255 / 1) 100%);
-  -webkit-backdrop-filter: blur(22px) saturate(1.5);
-  backdrop-filter: blur(22px) saturate(1.5);
-}
-[dir="rtl"] .menu-glass {
-  background: linear-gradient(to left, rgb(255 255 255 / 0.04) 0%, rgb(255 255 255 / 0.5) 55%, rgb(255 255 255 / 1) 100%);
+  background: rgb(255 255 255 / 0.45);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  backdrop-filter: blur(24px) saturate(1.5);
 }
 html {
   scrollbar-gutter: stable;

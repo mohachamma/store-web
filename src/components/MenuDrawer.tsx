@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { CloseIcon, MenuIcon } from "./icons";
+import { Wordmark } from "./Wordmark";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export interface MenuData {
@@ -34,14 +35,16 @@ export function MenuDrawer({ data }: { data: MenuData }) {
         onClick={(e) => e.target === dialog.current && close()}
         className="drawer m-0 h-[calc(100svh-var(--tabbar-h)-env(safe-area-inset-bottom))] max-h-svh w-screen max-w-none overflow-hidden bg-transparent p-0 text-ink md:h-svh backdrop:bg-transparent"
       >
-        {/* The glass: strongest at the top (where the list starts) and fading to clear towards the bottom. Text sits above it, untouched. */}
+        {/* The frosted glass layer. Text sits above it, untouched. */}
         <div aria-hidden className="menu-glass pointer-events-none absolute inset-0" />
         <div className="relative h-full overflow-y-auto overscroll-contain">
         <div className="mx-auto flex min-h-full w-full max-w-md flex-col px-3 pb-8 pt-3">
-          <div className="flex items-center px-1">
-            <button type="button" onClick={close} aria-label={t("close")} className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-mist">
+          <div className="flex items-center justify-between px-1">
+            <button type="button" onClick={close} aria-label={t("close")} className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-black/5">
               <CloseIcon />
             </button>
+            <span onClick={close}><Wordmark /></span>
+            <span className="size-10" aria-hidden />
           </div>
 
           {/* Pressing any link closes the menu (the page changes underneath). */}
