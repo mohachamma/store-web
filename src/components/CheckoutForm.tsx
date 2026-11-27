@@ -99,6 +99,7 @@ export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilay
         <span className="grid h-16 w-16 place-items-center rounded-full bg-mist">
           <BagIcon size={26} />
         </span>
+        <h1 className="sr-only">{t("title")}</h1>
         <p className="text-sm text-muted">{t("emptyCart")}</p>
         <Link href="/" className="rounded-full bg-ink px-6 py-3 text-xs font-bold uppercase text-paper">
           {t("backToCart")}

@@ -6,6 +6,8 @@ import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductGallery } from "@/components/ProductGallery";
 import { Row } from "@/components/Row";
+import { JsonLd } from "@/components/JsonLd";
+import { absoluteUrl, pageMetadata } from "@/config/site";
 import { routing, type Locale } from "@/i18n/routing";
 import { api } from "@/lib/api";
 
@@ -27,7 +29,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const p = await api.getProduct(slug, locale);
-  return p ? { title: p.name, description: p.description, openGraph: { images: [p.image.url] } } : {};
+  return p ? pageMetadata({ locale, path: `/products/${slug}`, title: p.name, description: p.description, image: p.image.url }) : {};
 }
 
 export default async function ProductPage({ params }: Props) {
@@ -40,8 +42,41 @@ export default async function ProductPage({ params }: Props) {
   ]);
   if (!product) notFound();
 
+  // Structured data (price, availability, category) so search results can show the product with its price.
+  const prices = product.variants.map((v) => v.price);
+  const inStock = product.variants.some((v) => v.stock > 0);
+  const ld = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description || undefined,
+      image: product.images.map((i) => absoluteUrl(i.url)),
+      sku: product.slug,
+      category: product.category.name,
+      url: absoluteUrl(`/${locale}/products/${product.slug}`),
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "DZD",
+        lowPrice: prices.length ? Math.min(...prices) : product.price,
+        highPrice: prices.length ? Math.max(...prices) : product.price,
+        offerCount: product.variants.length || 1,
+        availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: product.category.name, item: absoluteUrl(`/${locale}/search?category=${product.category.slug}`) },
+        { "@type": "ListItem", position: 2, name: product.name, item: absoluteUrl(`/${locale}/products/${product.slug}`) },
+      ],
+    },
+  ];
+
   return (
     <>
+      <JsonLd data={ld} />
       <Header variant="detail" />
       <main>
         <div className="mx-auto grid max-w-6xl md:grid-cols-[1.15fr_1fr] md:gap-12 md:px-6 md:pt-4">

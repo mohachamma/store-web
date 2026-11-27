@@ -7732,6 +7732,8 @@ export interface components {
             address: string | null;
             hours: string | null;
             whatsappUrl: string | null;
+            siteTitle: string | null;
+            siteDescription: string | null;
         };
         WomenPage: {
             enabled: boolean;
@@ -8296,6 +8298,8 @@ export interface components {
             email: "" | string;
             address: components["schemas"]["OptionalI18n"];
             hours: components["schemas"]["OptionalI18n"];
+            siteTitle?: components["schemas"]["OptionalI18n"];
+            siteDescription?: components["schemas"]["OptionalI18n"];
         };
     };
     responses: never;

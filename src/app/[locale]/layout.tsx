@@ -8,6 +8,7 @@ import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Footer } from "@/components/Footer";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { brand } from "@/config/brand";
+import { siteUrl } from "@/config/site";
 import { dirOf, routing } from "@/i18n/routing";
 import { api } from "@/lib/api";
 
@@ -30,8 +31,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
   return {
+    metadataBase: new URL(siteUrl()),
     title: { default: t("title"), template: `%s · ${brand.name}` },
     description: t("description"),
+    applicationName: brand.name,
   };
 }
 

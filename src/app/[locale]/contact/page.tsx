@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/Header";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getTranslations("contact"))("title") };
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "contact" });
+  return pageMetadata({ locale, path: "/contact", title: t("title"), description: t("intro") });
 }
 
 /** Contact details come from the dashboard (Pages & contact). Empty fields are simply not shown. */
