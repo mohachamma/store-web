@@ -42,6 +42,7 @@ export function AuthForms() {
 
   return (
     <div className="mx-auto w-full max-w-sm space-y-5 px-4 py-10">
+      <h1 className="sr-only">{t("title")}</h1>
       <div className="flex gap-1 rounded-full bg-mist p-1" role="tablist">
         <button type="button" role="tab" aria-selected={mode === "login"} className={tab("login")} onClick={() => setMode("login")}>{t("login")}</button>
         <button type="button" role="tab" aria-selected={mode === "register"} className={tab("register")} onClick={() => setMode("register")}>{t("register")}</button>

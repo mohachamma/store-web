@@ -14,7 +14,8 @@ export type ShopParams = { q?: string; category?: string; size?: string; color?:
 const int = (v?: string) => (v && /^\d{1,9}$/.test(v) ? Number(v) : undefined);
 
 /** Product grid with category chips, filters, sort and paging — shared by the shop (/search) and the Women's page (/women). */
-export async function ShopView({ locale, raw, basePath, audience, heading }: { locale: Locale; raw: ShopParams; basePath: string; audience?: "women" | "men"; heading?: string }) {
+export async function ShopView({ locale, raw, basePath, audience, heading, headingAs = "h1" }: { locale: Locale; raw: ShopParams; basePath: string; audience?: "women" | "men"; heading?: string; /** "h2" when the page already has its own h1 (e.g. the Women's page cover). */ headingAs?: "h1" | "h2" }) {
+  const Heading = headingAs;
   const sort = SORTS.includes(raw.sort as SortKey) ? (raw.sort as SortKey) : "newest";
   const page = Math.max(1, int(raw.page) ?? 1);
   const query: ProductQuery = { q: raw.q?.trim() || undefined, category: raw.category || undefined, audience, size: raw.size || undefined, color: raw.color || undefined, minPrice: int(raw.minPrice), maxPrice: int(raw.maxPrice) };
@@ -38,7 +39,7 @@ export async function ShopView({ locale, raw, basePath, audience, heading }: { l
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 md:px-6">
       <div className="flex items-baseline justify-between pt-2">
-        <h1 className="label text-[12px]">{title}</h1>
+        <Heading className="label text-[12px]">{title}</Heading>
         <p className="text-[11px] text-muted" aria-live="polite">{t("results", { count: filters.total })}</p>
       </div>
       <ShopFilters filters={filters} state={{ ...query, sort }} basePath={basePath} />

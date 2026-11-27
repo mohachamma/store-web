@@ -9,6 +9,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Row } from "@/components/Row";
 import { ShareButton } from "@/components/ShareButton";
 import { routing, type Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> };
@@ -31,7 +32,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const c = await api.getCollection(slug, locale);
-  return c ? { title: c.title } : {};
+  return c ? pageMetadata({ locale, path: `/collections/${slug}`, title: c.title, image: c.heroImage.url }) : {};
 }
 
 export default async function CollectionPage({ params }: Props) {

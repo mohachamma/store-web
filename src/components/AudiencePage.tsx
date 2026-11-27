@@ -21,7 +21,7 @@ export function AudiencePage({ page, audience, basePath, locale, raw }: { page: 
             </div>
           </div>
         </section>
-        <ShopView locale={locale} raw={raw} basePath={basePath} audience={audience} heading={page.title} />
+        <ShopView locale={locale} raw={raw} basePath={basePath} audience={audience} heading={page.title} headingAs="h2" />
       </main>
     </>
   );

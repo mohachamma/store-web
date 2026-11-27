@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { RichText } from "@/components/RichText";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> };
@@ -11,7 +12,8 @@ type Props = { params: Promise<{ locale: Locale; slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const page = await api.getPage(slug, locale);
-  return { title: page?.title ?? "—" };
+  if (!page) return {};
+  return pageMetadata({ locale, path: `/legal/${slug}`, title: page.title, description: page.body.replace(/[#*\-]/g, " ").replace(/\s+/g, " ").slice(0, 200) });
 }
 
 /** Terms, privacy, returns, shipping, cash on delivery: text, title and the "draft" notice all come from the dashboard. */

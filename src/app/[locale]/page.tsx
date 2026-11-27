@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BrandsMarquee } from "@/components/BrandsMarquee";
 import { CategoryCards } from "@/components/CategoryCards";
@@ -11,15 +12,45 @@ import { Row } from "@/components/Row";
 import { SearchField } from "@/components/SearchField";
 import { WhyUs } from "@/components/WhyUs";
 import type { Locale } from "@/i18n/routing";
+import { JsonLd } from "@/components/JsonLd";
+import { brand } from "@/config/brand";
+import { absoluteUrl, pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const [t, home, info] = await Promise.all([getTranslations({ locale, namespace: "meta" }), api.getHome(locale), api.getStoreInfo(locale).catch(() => null)]);
+  // Title and description are edited in the dashboard (Pages & contact); the translated defaults apply until then.
+  return pageMetadata({ locale, path: "", title: info?.siteTitle || t("title"), description: info?.siteDescription || t("description"), image: home.hero?.image.url, absoluteTitle: true });
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, home] = await Promise.all([getTranslations("home"), api.getHome(locale)]);
+  const [t, home, info] = await Promise.all([getTranslations("home"), api.getHome(locale), api.getStoreInfo(locale).catch(() => null)]);
+  // The shop itself, for search engines: name, address, contact (all edited in the dashboard) and the search box.
+  const ld = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: brand.name,
+      url: absoluteUrl(`/${locale}`),
+      ...(info?.phone || info?.email ? { contactPoint: { "@type": "ContactPoint", contactType: "customer service", telephone: info.phone ?? undefined, email: info.email ?? undefined, availableLanguage: ["ar", "fr", "en"] } } : {}),
+      ...(info?.address ? { address: { "@type": "PostalAddress", streetAddress: info.address, addressCountry: "DZ" } } : {}),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: brand.name,
+      url: absoluteUrl(`/${locale}`),
+      inLanguage: locale,
+      potentialAction: { "@type": "SearchAction", target: { "@type": "EntryPoint", urlTemplate: absoluteUrl(`/${locale}/search?q={search_term_string}`) }, "query-input": "required name=search_term_string" },
+    },
+  ];
 
   return (
     <>
+      <JsonLd data={ld} />
       <Header />
       <main className="space-y-3 pt-1">
         <SearchField locale={locale} />

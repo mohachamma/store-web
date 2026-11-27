@@ -3,13 +3,15 @@ import { setRequestLocale } from "next-intl/server";
 import { AudiencePage } from "@/components/AudiencePage";
 import type { ShopParams } from "@/components/ShopView";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
 
 type Props = { params: Promise<{ locale: Locale }>; searchParams: Promise<ShopParams> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const page = await api.getWomenPage((await params).locale);
-  return { title: page.title, description: page.subtitle ?? undefined };
+  const { locale } = await params;
+  const page = await api.getWomenPage(locale);
+  return pageMetadata({ locale, path: "/women", title: page.title, description: page.subtitle, image: page.heroImage?.url });
 }
 
 /** The Women's page. Texts and cover come from the dashboard. */

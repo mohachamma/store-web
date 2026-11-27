@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/config/site";
 import { api } from "@/lib/api";
 
 type Props = { params: Promise<{ locale: Locale }> };
@@ -11,7 +12,7 @@ type Props = { params: Promise<{ locale: Locale }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const sale = await api.getSale(locale);
-  return { title: sale.title, description: sale.subtitle ?? undefined };
+  return pageMetadata({ locale, path: "/sale", title: sale.title, description: sale.subtitle, image: sale.products[0]?.image.url });
 }
 
 /** Sale page: lists products whose price is below their compare-at price. Title/subtitle are edited in the dashboard. */
