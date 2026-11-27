@@ -245,6 +245,14 @@ function filterMock(query: ProductQuery, locale: Locale): Product[] {
   return [...list].sort(by);
 }
 
+const PAGES = [
+  { slug: "terms", title: "الشروط والأحكام" },
+  { slug: "privacy", title: "سياسة الخصوصية" },
+  { slug: "returns", title: "الإرجاع والتبديل" },
+  { slug: "shipping", title: "سياسة التوصيل" },
+  { slug: "cod", title: "الدفع عند الاستلام" },
+];
+
 export const mockApi: StoreApi = {
   getHome: (locale) =>
     delay<HomeContent>({
@@ -391,6 +399,12 @@ export const mockApi: StoreApi = {
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
 
+  getPages: async () => PAGES.map(({ slug, title }) => ({ slug, title })),
+  getPage: async (slug) => {
+    const p = PAGES.find((x) => x.slug === slug);
+    return p ? { slug, title: p.title, body: "## مسودة\nنص تجريبي لهذه الصفحة.\n\n- نقطة أولى\n- نقطة ثانية", isDraft: true, draftNotice: "مسودة — يجب أن يراجعها محامٍ قبل الإطلاق.", updatedAt: new Date().toISOString() } : null;
+  },
+  getStoreInfo: async () => ({ phone: "0550 12 34 56", email: "hello@store.test", address: "الجزائر العاصمة", hours: "كل يوم 9:00 – 18:00", whatsappUrl: "https://wa.me/213550123456" }),
   subscribeNewsletter: async () => ({ ok: true, value: { ok: true } }),
 
   // Accounts in mock mode: any credentials work; data lives in memory for the session of the dev server.

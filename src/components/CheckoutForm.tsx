@@ -261,6 +261,12 @@ export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilay
             {pending ? t("placing") : method === "chargily" ? t("payNow") : t("place")}
           </button>
           <p className="text-center text-[11px] text-muted">{method === "chargily" ? t("cardNote") : t("callNote")}</p>
+          <p className="text-center text-[11px] text-muted">
+            {t.rich("accept", {
+              terms: (c) => <Link href="/legal/terms" className="underline">{c}</Link>,
+              privacy: (c) => <Link href="/legal/privacy" className="underline">{c}</Link>,
+            })}
+          </p>
         </div>
       </aside>
     </form>

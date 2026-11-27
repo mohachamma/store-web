@@ -196,7 +196,8 @@
     "card": "CIB / Edahabia card",
     "cardHint": "Pay now, securely, through Chargily.",
     "payNow": "Pay now",
-    "cardNote": "You will be taken to the secure payment page, then we call you to confirm."
+    "cardNote": "You will be taken to the secure payment page, then we call you to confirm.",
+    "accept": "By placing your order you accept the <terms>terms and conditions</terms> and the <privacy>privacy policy</privacy>."
   },
   "order": {
     "title": "Thank you! We received your order",
@@ -238,5 +239,16 @@
     "thanks": "Thank you! Your email is saved.",
     "error": "Could not subscribe. Check the email and try again.",
     "privacy": "We use your email only for our news; ask us to delete it any time."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "We would love to hear from you: a question about an order, an exchange, or anything else.",
+    "empty": "Contact details will appear here soon.",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Opening hours",
+    "whatsapp": "Chat on WhatsApp",
+    "rights": "To access, correct or delete your personal data, write to us using any of the means above."
   }
 }
