@@ -32,9 +32,9 @@ export function MenuDrawer({ data }: { data: MenuData }) {
         ref={dialog}
         aria-label={t("title")}
         onClick={(e) => e.target === dialog.current && close()}
-        className="drawer m-0 h-[calc(100svh-var(--tabbar-h)-env(safe-area-inset-bottom))] max-h-svh w-[72vw] min-w-60 max-w-md md:h-svh overflow-y-auto bg-paper/20 p-0 text-ink backdrop-blur-lg backdrop-saturate-150 backdrop:bg-black/10 me-auto"
+        className="drawer m-0 h-[calc(100svh-var(--tabbar-h)-env(safe-area-inset-bottom))] max-h-svh w-screen max-w-none overscroll-contain md:h-svh overflow-y-auto bg-paper/45 p-0 text-ink backdrop-blur-2xl backdrop-saturate-150 backdrop:bg-transparent"
       >
-        <div className="flex min-h-full flex-col px-3 pb-8 pt-3">
+        <div className="mx-auto flex min-h-full w-full max-w-md flex-col px-3 pb-8 pt-3">
           <div className="flex items-center px-1">
             <button type="button" onClick={close} aria-label={t("close")} className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-mist">
               <CloseIcon />

@@ -183,36 +183,29 @@ body {
   }
 }
 
-/* Side menu: slides in from the reading-start side (left in LTR, right in RTL). */
-@keyframes drawer-in {
+/* Side menu: a full-page glass sheet (above the floating tab bar) that fades in. While it is open the page behind is frozen
+   and keeps its scrollbar space, so nothing jumps or shifts underneath. */
+@keyframes menu-in {
   from {
-    transform: translateX(calc(var(--drawer-dir, 1) * -100%));
+    opacity: 0;
+    transform: translateY(-8px);
   }
   to {
+    opacity: 1;
     transform: none;
   }
 }
-[dir="rtl"] {
-  --drawer-dir: -1;
-}
 dialog.drawer[open] {
-  animation: drawer-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: menu-in 0.22s ease-out;
 }
-/* The glass fades out gradually towards its far edge (no hard line splitting the page). The mask also softens the blur. */
-dialog.drawer {
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+html {
+  scrollbar-gutter: stable;
 }
-[dir="rtl"] dialog.drawer {
-  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 42%, transparent 100%);
-  mask-image: linear-gradient(to left, #000 0%, #000 42%, transparent 100%);
-}
-dialog.drawer[open]::backdrop {
-  animation: fade-in 0.2s ease;
+html:has(dialog.drawer[open]) {
+  overflow: hidden;
 }
 @media (prefers-reduced-motion: reduce) {
-  dialog.drawer[open],
-  dialog.drawer[open]::backdrop {
+  dialog.drawer[open] {
     animation: none;
   }
 }
