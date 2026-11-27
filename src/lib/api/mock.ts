@@ -403,6 +403,7 @@ export const mockApi: StoreApi = {
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
 
+  getCollections: async (locale) => [{ slug: "winter", title: { ar: "تشكيلة الشتاء", fr: "Collection hiver", en: "Winter Collection" }[locale] }],
   getWomenPage: async (locale) => ({ enabled: true, title: { ar: "نساء", fr: "Femme", en: "Women" }[locale], subtitle: { ar: "أحدث ملابس النساء", fr: "Les dernières nouveautés pour elle", en: "The latest for her" }[locale], heroImage: null }),
   getPages: async () => PAGES.map(({ slug, title }) => ({ slug, title })),
   getPage: async (slug) => {

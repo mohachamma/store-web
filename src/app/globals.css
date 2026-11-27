@@ -181,3 +181,28 @@ body {
     overflow-x: auto;
   }
 }
+
+/* Side menu: slides in from the reading-start side (left in LTR, right in RTL). */
+@keyframes drawer-in {
+  from {
+    transform: translateX(calc(var(--drawer-dir, 1) * -100%));
+  }
+  to {
+    transform: none;
+  }
+}
+[dir="rtl"] {
+  --drawer-dir: -1;
+}
+dialog.drawer[open] {
+  animation: drawer-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+dialog.drawer[open]::backdrop {
+  animation: fade-in 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.drawer[open],
+  dialog.drawer[open]::backdrop {
+    animation: none;
+  }
+}

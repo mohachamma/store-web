@@ -35,6 +35,7 @@ export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
 export type WomenPage = S["WomenPage"];
+export type CollectionLink = S["CollectionLinks"][number];
 export type PageLink = S["PageLinks"][number];
 export type InfoPage = S["InfoPage"];
 export type StoreInfo = S["StoreInfo"];
@@ -88,6 +89,7 @@ export interface StoreApi {
   // Customer accounts (the token is the access token kept in the httpOnly cookie).
   login(email: string, password: string): Promise<Result<LoginResult>>;
   register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
+  getCollections(locale: Locale): Promise<CollectionLink[]>;
   getWomenPage(locale: Locale): Promise<WomenPage>;
   getPages(locale: Locale): Promise<PageLink[]>;
   getPage(slug: string, locale: Locale): Promise<InfoPage | null>;

@@ -7,6 +7,7 @@ import { BackLink } from "./BackLink";
 import { CartBadge } from "./CartBadge";
 import { BagIcon, HeartIcon, SearchIcon, UserIcon } from "./icons";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { MenuDrawer } from "./MenuDrawer";
 import { Wordmark } from "./Wordmark";
 
 /**
@@ -16,13 +17,27 @@ import { Wordmark } from "./Wordmark";
 export async function Header({ variant = "home" }: { variant?: "home" | "detail" }) {
   const t = await getTranslations("nav");
   // The Women's page link and its label come from the dashboard; hidden while the page is switched off.
-  const women = await api.getWomenPage((await getLocale()) as Locale).catch(() => null);
+  const locale = (await getLocale()) as Locale;
+  const [women, filters, collections, pages] = await Promise.all([
+    api.getWomenPage(locale).catch(() => null),
+    api.getFilters({}, locale).catch(() => null),
+    api.getCollections(locale).catch(() => []),
+    api.getPages(locale).catch(() => []),
+  ]);
   const iconBtn = "relative grid h-10 w-10 place-items-center rounded-full text-ink transition hover:bg-mist";
 
   return (
     <header className="sticky top-0 z-30 border-b border-transparent bg-paper/90 backdrop-blur supports-[backdrop-filter]:bg-paper/75">
       <div className="mx-auto grid h-14 max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-4 md:h-16 md:px-6">
         <div className="flex items-center gap-1">
+          <MenuDrawer
+            data={{
+              women: women?.enabled ? { title: women.title } : null,
+              categories: filters?.categories ?? [],
+              collections,
+              pages,
+            }}
+          />
           {variant === "detail" ? (
             <BackLink label={t("home")} />
           ) : (
