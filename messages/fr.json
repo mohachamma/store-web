@@ -196,7 +196,8 @@
     "card": "Carte CIB / Edahabia",
     "cardHint": "Payez maintenant en toute sécurité via Chargily.",
     "payNow": "Payer maintenant",
-    "cardNote": "Vous serez redirigé vers la page de paiement sécurisée, puis nous vous appelons pour confirmer."
+    "cardNote": "Vous serez redirigé vers la page de paiement sécurisée, puis nous vous appelons pour confirmer.",
+    "accept": "En passant commande, vous acceptez les <terms>conditions générales</terms> et la <privacy>politique de confidentialité</privacy>."
   },
   "order": {
     "title": "Merci ! Votre commande est reçue",
@@ -238,5 +239,16 @@
     "thanks": "Merci ! Votre e-mail est enregistré.",
     "error": "Inscription impossible. Vérifiez l'e-mail et réessayez.",
     "privacy": "Nous utilisons votre e-mail uniquement pour nos nouveautés ; vous pouvez demander sa suppression à tout moment."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "Nous serons ravis de vous lire : une question sur une commande, un échange, ou toute autre demande.",
+    "empty": "Les coordonnées s'afficheront ici bientôt.",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "address": "Adresse",
+    "hours": "Horaires",
+    "whatsapp": "Discuter sur WhatsApp",
+    "rights": "Pour accéder à vos données personnelles, les corriger ou les supprimer, écrivez-nous par l'un des moyens ci-dessus."
   }
 }

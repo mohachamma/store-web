@@ -34,6 +34,9 @@ export type CategoryCard = S["CategoryCard"];
 export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
+export type PageLink = S["PageLinks"][number];
+export type InfoPage = S["InfoPage"];
+export type StoreInfo = S["StoreInfo"];
 export type CatalogFilters = S["CatalogFilters"];
 export type OrderQuote = S["OrderQuote"];
 export type OrderCreated = S["OrderCreated"];
@@ -82,6 +85,9 @@ export interface StoreApi {
   // Customer accounts (the token is the access token kept in the httpOnly cookie).
   login(email: string, password: string): Promise<Result<LoginResult>>;
   register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
+  getPages(locale: Locale): Promise<PageLink[]>;
+  getPage(slug: string, locale: Locale): Promise<InfoPage | null>;
+  getStoreInfo(locale: Locale): Promise<StoreInfo>;
   subscribeNewsletter(email: string): Promise<Result<{ ok: true }>>;
   getMe(token: string): Promise<MeProfile | null>;
   updateMe(token: string, input: { name: string | null; phone: string | null }): Promise<Result<MeProfile>>;
