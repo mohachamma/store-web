@@ -198,6 +198,13 @@ body {
 dialog.drawer[open] {
   animation: menu-in 0.22s ease-out;
 }
+/* Glass with graded transparency: the white tint is strongest at the top and fades towards the bottom, while the blur stays
+   even so the page text behind never competes with the menu entries. */
+.menu-glass {
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.72) 0%, rgb(255 255 255 / 0.4) 50%, rgb(255 255 255 / 0.1) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+}
 html {
   scrollbar-gutter: stable;
 }
