@@ -137,3 +137,9 @@ export const MenuIcon = (p: P) => (
     <path d="M4 7h16M4 12h16M4 17h16" />
   </svg>
 );
+
+export const HomeIcon = ({ filled, ...p }: P & { filled?: boolean }) => (
+  <svg {...base(p)} fill={filled ? "currentColor" : "none"}>
+    <path d="M4 11 12 4l8 7v8.5a1 1 0 0 1-1 1h-4.5v-5.5h-5v5.5H5a1 1 0 0 1-1-1V11Z" />
+  </svg>
+);

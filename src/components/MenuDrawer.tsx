@@ -3,20 +3,17 @@
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { Link } from "@/i18n/navigation";
-import { CartBadge } from "./CartBadge";
-import { BagIcon, CloseIcon, HeartIcon, MenuIcon, UserIcon } from "./icons";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CloseIcon, MenuIcon } from "./icons";
 import { Wordmark } from "./Wordmark";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export interface MenuData {
   /** Women's page link (null while the page is switched off in the dashboard). */
   women: { title: string } | null;
   /** Men's page link (null while the page is switched off). */
   men: { title: string } | null;
-  categories: { slug: string; name: string; count: number }[];
+  categories: { slug: string; name: string }[];
   collections: { slug: string; title: string }[];
-  /** Legal / information pages, in the dashboard's order. */
-  pages: { slug: string; title: string }[];
 }
 
 /** Hamburger button + side drawer with every page of the shop, so the visitor never has to go back. Content comes from the API. */
@@ -24,7 +21,7 @@ export function MenuDrawer({ data }: { data: MenuData }) {
   const t = useTranslations("menu");
   const dialog = useRef<HTMLDialogElement>(null);
   const close = () => dialog.current?.close();
-  const row = "flex items-center justify-between gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition hover:bg-mist active:bg-mist";
+  const row = "flex items-center justify-between gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition hover:bg-black/5 active:bg-black/10";
   const head = "label px-3 pb-1 pt-5 text-[11px] text-muted";
 
   return (
@@ -36,11 +33,14 @@ export function MenuDrawer({ data }: { data: MenuData }) {
         ref={dialog}
         aria-label={t("title")}
         onClick={(e) => e.target === dialog.current && close()}
-        className="drawer m-0 h-svh max-h-svh w-[min(88vw,22rem)] overflow-y-auto bg-paper p-0 text-ink shadow-2xl backdrop:bg-black/50 me-auto"
+        className="drawer m-0 h-[calc(100svh-var(--tabbar-h)-env(safe-area-inset-bottom))] max-h-svh w-screen max-w-none overflow-hidden bg-transparent p-0 text-ink md:h-svh backdrop:bg-transparent"
       >
-        <div className="flex min-h-full flex-col px-3 pb-8 pt-3">
+        {/* The frosted glass layer. Text sits above it, untouched. */}
+        <div aria-hidden className="menu-glass pointer-events-none absolute inset-0" />
+        <div className="relative h-full overflow-y-auto overscroll-contain">
+        <div className="mx-auto flex min-h-full w-full max-w-md flex-col px-3 pb-8 pt-3">
           <div className="flex items-center justify-between px-1">
-            <button type="button" onClick={close} aria-label={t("close")} className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-mist">
+            <button type="button" onClick={close} aria-label={t("close")} className="grid h-10 w-10 place-items-center rounded-full transition hover:bg-black/5">
               <CloseIcon />
             </button>
             <span onClick={close}><Wordmark /></span>
@@ -65,7 +65,6 @@ export function MenuDrawer({ data }: { data: MenuData }) {
                     <li key={c.slug}>
                       <Link href={`/search?category=${encodeURIComponent(c.slug)}`} className={row}>
                         {c.name}
-                        <span className="text-xs text-muted">{c.count}</span>
                       </Link>
                     </li>
                   ))}
@@ -84,25 +83,15 @@ export function MenuDrawer({ data }: { data: MenuData }) {
               </>
             ) : null}
 
-            <h2 className={head}>{t("myspace")}</h2>
-            <ul className="space-y-0.5">
-              <li><Link href="/favorites" className={row}><span className="flex items-center gap-3"><HeartIcon size={18} />{t("favorites")}</span></Link></li>
-              <li><Link href="/cart" className={row}><span className="flex items-center gap-3"><BagIcon size={18} />{t("cart")}</span><CartBadge className="static! end-auto! top-auto!" /></Link></li>
-              <li><Link href="/account" className={row}><span className="flex items-center gap-3"><UserIcon size={18} />{t("account")}</span></Link></li>
-            </ul>
-
-            <h2 className={head}>{t("info")}</h2>
-            <ul className="space-y-0.5">
-              {data.pages.map((p) => (
-                <li key={p.slug}><Link href={`/legal/${p.slug}`} className={`${row} text-[14px] font-normal text-muted`}>{p.title}</Link></li>
-              ))}
-              <li><Link href="/contact" className={`${row} text-[14px] font-normal text-muted`}>{t("contact")}</Link></li>
+            <ul className="mt-2 space-y-0.5 border-t border-black/5 pt-2">
+              <li><Link href="/contact" className={row}>{t("contact")}</Link></li>
             </ul>
           </nav>
 
           <div className="mt-auto px-3 pt-8">
             <LanguageSwitcher />
           </div>
+        </div>
         </div>
       </dialog>
     </>

@@ -9,7 +9,8 @@
   --muted: #8a8a8a;
   --accent: #111111;
   --danger: #c0353b;
-  --tabbar-h: 64px;
+  /* Floating tab bar: pill height (64px) + its gap to the screen bottom (12px). The side menu ends exactly at its top. */
+  --tabbar-h: 76px;
 }
 
 @theme inline {
@@ -182,27 +183,35 @@ body {
   }
 }
 
-/* Side menu: slides in from the reading-start side (left in LTR, right in RTL). */
-@keyframes drawer-in {
+/* Side menu: a full-page glass sheet (above the floating tab bar) that fades in. While it is open the page behind is frozen
+   and keeps its scrollbar space, so nothing jumps or shifts underneath. */
+@keyframes menu-in {
   from {
-    transform: translateX(calc(var(--drawer-dir, 1) * -100%));
+    opacity: 0;
+    transform: translateY(-8px);
   }
   to {
+    opacity: 1;
     transform: none;
   }
 }
-[dir="rtl"] {
-  --drawer-dir: -1;
-}
 dialog.drawer[open] {
-  animation: drawer-in 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: menu-in 0.22s ease-out;
 }
-dialog.drawer[open]::backdrop {
-  animation: fade-in 0.2s ease;
+/* Frosted glass over the whole page: evenly translucent white tint + blur, so the page shows through softly. */
+.menu-glass {
+  background: rgb(255 255 255 / 0.45);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  backdrop-filter: blur(24px) saturate(1.5);
+}
+html {
+  scrollbar-gutter: stable;
+}
+html:has(dialog.drawer[open]) {
+  overflow: hidden;
 }
 @media (prefers-reduced-motion: reduce) {
-  dialog.drawer[open],
-  dialog.drawer[open]::backdrop {
+  dialog.drawer[open] {
     animation: none;
   }
 }
