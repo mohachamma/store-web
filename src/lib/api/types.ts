@@ -34,6 +34,7 @@ export type CategoryCard = S["CategoryCard"];
 export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
+export type CatalogFilters = S["CatalogFilters"];
 export type OrderQuote = S["OrderQuote"];
 export type OrderCreated = S["OrderCreated"];
 export type OrderView = S["OrderView"];
@@ -45,9 +46,18 @@ export type QuoteInput = Pick<CreateOrderBody, "items" | "wilayaCode" | "deliver
 /** API refusals (out of stock, invalid code, …) are results, not exceptions, so the UI can explain them. */
 export type Result<T> = { ok: true; value: T } | { ok: false; code: string; message: string };
 
+export type SortKey = "newest" | "price_asc" | "price_desc" | "discount";
+
 export interface ProductQuery {
   q?: string;
   category?: string;
+  size?: string;
+  color?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: SortKey;
+  limit?: number;
+  offset?: number;
 }
 
 /** What the storefront needs from the data layer. Implemented by `mock.ts` and `real.ts` with identical signatures. */
@@ -56,6 +66,8 @@ export interface StoreApi {
   getCollection(slug: string, locale: Locale): Promise<CollectionPage | null>;
   getProduct(slug: string, locale: Locale): Promise<Product | null>;
   listProducts(query: ProductQuery, locale: Locale): Promise<ProductSummary[]>;
+  /** Filter options for a search + how many products match (sort / paging are ignored). */
+  getFilters(query: ProductQuery, locale: Locale): Promise<CatalogFilters>;
   getRelated(slug: string, locale: Locale): Promise<ProductSummary[]>;
   getSale(locale: Locale): Promise<SalePage>;
   getSite(locale: Locale): Promise<SiteSettings>;

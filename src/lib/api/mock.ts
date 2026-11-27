@@ -1,6 +1,8 @@
 /** Mock adapter with sample data (enabled by NEXT_PUBLIC_USE_MOCK=true). */
 import type { Locale } from "@/i18n/routing";
 import type {
+  CatalogFilters,
+  ProductQuery,
   Category,
   CategoryRow,
   CollectionPage,
@@ -225,6 +227,24 @@ function priceMock(input: QuoteInput) {
   return { ok: true as const, value: { items, subtotal, shippingFee, freeShipping, discountTotal, discount, total: subtotal + shippingFee - discountTotal } satisfies OrderQuote };
 }
 
+/** Same filtering rules as the real API, over the sample catalog. */
+function filterMock(query: ProductQuery, locale: Locale): Product[] {
+  const needle = query.q?.trim().toLowerCase();
+  const list = all(locale)
+    .filter((p) => !query.category || p.category.slug === query.category)
+    .filter((p) => !needle || p.name.toLowerCase().includes(needle) || p.category.name.toLowerCase().includes(needle) || p.slug.includes(needle))
+    .filter((p) => query.minPrice === undefined || p.price >= query.minPrice)
+    .filter((p) => query.maxPrice === undefined || p.price <= query.maxPrice)
+    .filter((p) => (!query.size && !query.color) || p.variants.some((v) => v.stock > 0 && (!query.size || v.size === query.size) && (!query.color || v.color.toLowerCase() === query.color.toLowerCase())));
+  const by = {
+    newest: (a: Product, b: Product) => Number(b.isNew) - Number(a.isNew),
+    price_asc: (a: Product, b: Product) => a.price - b.price,
+    price_desc: (a: Product, b: Product) => b.price - a.price,
+    discount: (a: Product, b: Product) => (b.compareAtPrice ? 1 - b.price / b.compareAtPrice : 0) - (a.compareAtPrice ? 1 - a.price / a.compareAtPrice : 0),
+  }[query.sort ?? "newest"];
+  return [...list].sort(by);
+}
+
 export const mockApi: StoreApi = {
   getHome: (locale) =>
     delay<HomeContent>({
@@ -285,20 +305,29 @@ export const mockApi: StoreApi = {
     return delay(seed ? toProduct(seed, locale) : null);
   },
 
-  listProducts: ({ q, category }, locale) => {
-    const needle = q?.trim().toLowerCase();
-    return delay(
-      all(locale)
-        .filter((p) => !category || p.category.slug === category)
-        .filter(
-          (p) =>
-            !needle ||
-            p.name.toLowerCase().includes(needle) ||
-            p.category.name.toLowerCase().includes(needle) ||
-            p.slug.includes(needle),
-        )
-        .map(summary),
-    );
+  listProducts: (query, locale) => delay(filterMock(query, locale).slice(query.offset ?? 0, (query.offset ?? 0) + (query.limit ?? 48)).map(summary)),
+
+  getFilters: (query, locale) => {
+    const matching = filterMock(query, locale);
+    const ignoring = (...skip: (keyof ProductQuery)[]) => {
+      const q = { ...query };
+      for (const k of skip) delete q[k];
+      return filterMock(q, locale);
+    };
+    const inStock = (ps: Product[]) => ps.flatMap((p) => p.variants.filter((v) => v.stock > 0));
+    const rank = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+    const sizes = [...new Set(inStock(ignoring("size")).map((v) => v.size))].sort((a, b) => (rank.indexOf(a) + 1 || 100) - (rank.indexOf(b) + 1 || 100) || a.localeCompare(b));
+    const colors = [...new Set(inStock(ignoring("color")).map((v) => v.color))].sort();
+    const priced = ignoring("minPrice", "maxPrice");
+    const cats = ignoring("category", "size", "color", "minPrice", "maxPrice");
+    const categories = [...new Set(cats.map((p) => p.category.slug))].map((slug) => ({ slug, name: cats.find((p) => p.category.slug === slug)!.category.name, count: cats.filter((p) => p.category.slug === slug).length }));
+    return delay<CatalogFilters>({
+      total: matching.length,
+      categories,
+      sizes,
+      colors,
+      priceRange: priced.length ? { min: Math.min(...priced.map((p) => p.price)), max: Math.max(...priced.map((p) => p.price)) } : null,
+    });
   },
 
   getRelated: (slug, locale) => {

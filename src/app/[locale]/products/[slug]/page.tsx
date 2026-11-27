@@ -16,7 +16,7 @@ type Props = { params: Promise<{ locale: Locale; slug: string }> };
 export async function generateStaticParams() {
   try {
     const perLocale = await Promise.all(
-      routing.locales.map(async (locale) => (await api.listProducts({}, locale)).map((p) => ({ locale, slug: p.slug }))),
+      routing.locales.map(async (locale) => (await api.listProducts({ limit: 100 }, locale)).map((p) => ({ locale, slug: p.slug }))),
     );
     return perLocale.flat();
   } catch {
