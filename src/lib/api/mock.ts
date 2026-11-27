@@ -227,11 +227,15 @@ function priceMock(input: QuoteInput) {
   return { ok: true as const, value: { items, subtotal, shippingFee, freeShipping, discountTotal, discount, total: subtotal + shippingFee - discountTotal } satisfies OrderQuote };
 }
 
+const WOMEN = new Set(["hooded-deck-coat", "oxford-shirt-white", "heavy-tee-cream", "chelsea-boot", "slim-denim-jean"]);
+const MEN = new Set(["nylon-zip-hoodie", "utility-jacket", "black-skate-mid", "red-skate-mid"]);
+
 /** Same filtering rules as the real API, over the sample catalog. */
 function filterMock(query: ProductQuery, locale: Locale): Product[] {
   const needle = query.q?.trim().toLowerCase();
   const list = all(locale)
     .filter((p) => !query.category || p.category.slug === query.category)
+    .filter((p) => !query.audience || (query.audience === "women" ? !MEN.has(p.slug) : !WOMEN.has(p.slug)))
     .filter((p) => !needle || p.name.toLowerCase().includes(needle) || p.category.name.toLowerCase().includes(needle) || p.slug.includes(needle))
     .filter((p) => query.minPrice === undefined || p.price >= query.minPrice)
     .filter((p) => query.maxPrice === undefined || p.price <= query.maxPrice)
@@ -399,6 +403,9 @@ export const mockApi: StoreApi = {
 
   getOrder: (n, token) => delay(mockOrders().get(`${n}:${token}`) ?? null),
 
+  getCollections: async (locale) => [{ slug: "winter", title: { ar: "تشكيلة الشتاء", fr: "Collection hiver", en: "Winter Collection" }[locale] }],
+  getMenPage: async (locale) => ({ enabled: true, title: { ar: "رجال", fr: "Homme", en: "Men" }[locale], subtitle: { ar: "أحدث ملابس الرجال", fr: "Les dernières nouveautés pour lui", en: "The latest for him" }[locale], heroImage: null }),
+  getWomenPage: async (locale) => ({ enabled: true, title: { ar: "نساء", fr: "Femme", en: "Women" }[locale], subtitle: { ar: "أحدث ملابس النساء", fr: "Les dernières nouveautés pour elle", en: "The latest for her" }[locale], heroImage: null }),
   getPages: async () => PAGES.map(({ slug, title }) => ({ slug, title })),
   getPage: async (slug) => {
     const p = PAGES.find((x) => x.slug === slug);

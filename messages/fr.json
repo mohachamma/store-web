@@ -250,5 +250,21 @@
     "hours": "Horaires",
     "whatsapp": "Discuter sur WhatsApp",
     "rights": "Pour accéder à vos données personnelles, les corriger ou les supprimer, écrivez-nous par l'un des moyens ci-dessus."
+  },
+  "menu": {
+    "title": "Menu",
+    "open": "Ouvrir le menu",
+    "close": "Fermer le menu",
+    "home": "Accueil",
+    "shop": "Tous les produits",
+    "sale": "Promotions",
+    "categories": "Catégories",
+    "collections": "Collections",
+    "myspace": "Mon espace",
+    "favorites": "Favoris",
+    "cart": "Panier",
+    "account": "Mon compte et mes commandes",
+    "info": "Informations",
+    "contact": "Contact"
   }
 }

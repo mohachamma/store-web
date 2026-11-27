@@ -23,7 +23,7 @@ const on = "border-ink bg-ink text-paper";
 const off = "border-line hover:border-ink";
 
 /** Filter bar for the shop page. The whole state lives in the URL, so results are shareable and the server renders them. */
-export function ShopFilters({ filters, state }: { filters: CatalogFilters; state: ShopState }) {
+export function ShopFilters({ filters, state, basePath = "/search" }: { filters: CatalogFilters; state: ShopState; basePath?: string }) {
   const t = useTranslations("search");
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -41,7 +41,7 @@ export function ShopFilters({ filters, state }: { filters: CatalogFilters; state
     if (merged.maxPrice !== undefined) p.set("maxPrice", String(merged.maxPrice));
     if (merged.sort !== "newest") p.set("sort", merged.sort);
     const qs = p.toString();
-    start(() => router.push(`/search${qs ? `?${qs}` : ""}`));
+    start(() => router.push(`${basePath}${qs ? `?${qs}` : ""}`));
   }
 
   const activeCount = [state.size, state.color, state.minPrice, state.maxPrice].filter((v) => v !== undefined && v !== "").length;

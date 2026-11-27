@@ -131,3 +131,9 @@ export const StarIcon = (p: P) => (
     <path d="m12 4 2.4 5 5.4.7-4 3.7 1 5.4L12 16.2 7.2 18.8l1-5.4-4-3.7 5.4-.7L12 4Z" />
   </svg>
 );
+
+export const MenuIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </svg>
+);

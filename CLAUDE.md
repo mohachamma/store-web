@@ -72,6 +72,9 @@ Any content shown in the storefront must be editable from the dashboard. For eve
 - [x] Home sections (2026-11-29): category cards, "why us" and newsletter on the home page, all from `GET /catalog/home` (`categoryCards`, `whyUs`, `newsletter`) and edited in the dashboard; sign-up via `POST /newsletter`.
 - [x] Shop page filters (2026-11-29): `/search` is the shop — category chips, filter panel (size, color, price range), sort, active-filter chips, paging (24 per page); state in the URL, options from `GET /catalog/filters`. Collection pages stay curated (no filters).
 - [x] Legal pages + contact (2026-11-30): `/legal/{terms,privacy,returns,shipping,cod}` and `/contact`, text from `GET /catalog/pages/{slug}` / `GET /catalog/store-info` (edited in the dashboard), draft notice while `isDraft`, footer links from `GET /catalog/pages`, consent line with links at checkout. `RichText` renders `## heading`, `- item`, `**bold**` safely.
+- [x] Women's page (2026-12-01): `/women` (cover + title from `GET /catalog/women`, products from `GET /catalog/products?audience=women`, same filters via shared `ShopView`), desktop menu link with the dashboard's title (hidden while disabled), home card links to it.
+- [x] Side menu (2026-12-01): hamburger on every page header opening a drawer from the reading-start side (`MenuDrawer`): home, women, shop, sale, categories (`GET /catalog/filters`), collections (`GET /catalog/collections`), favorites, cart, account, info pages + contact, language switcher. All lists come from the API.
+- [x] Men's page (2026-12-02): `/men` like `/women` via the shared `AudiencePage` (`GET /catalog/men`, `audience=men`), linked from the side menu, the desktop nav (when enabled) and the home card.
 
 ## Needs from API
 (Checkout endpoints `POST /orders/quote`, `POST /orders`, `GET /orders/{n}?token=`, `GET /shipping/wilayas`, `GET /shipping/wilayas/{code}/communes`, `GET /shipping/rules` exist since API 0.3.0.)

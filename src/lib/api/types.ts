@@ -34,6 +34,9 @@ export type CategoryCard = S["CategoryCard"];
 export type NewsletterBlock = S["NewsletterBlock"];
 export type FavoriteList = S["FavoriteList"];
 export type MyOrder = S["MyOrder"];
+export type WomenPage = S["WomenPage"];
+export type MenPage = S["MenPage"];
+export type CollectionLink = S["CollectionLinks"][number];
 export type PageLink = S["PageLinks"][number];
 export type InfoPage = S["InfoPage"];
 export type StoreInfo = S["StoreInfo"];
@@ -54,6 +57,8 @@ export type SortKey = "newest" | "price_asc" | "price_desc" | "discount";
 export interface ProductQuery {
   q?: string;
   category?: string;
+  /** Women\'s (or men\'s) products; unisex ones are included. */
+  audience?: "women" | "men";
   size?: string;
   color?: string;
   minPrice?: number;
@@ -85,6 +90,9 @@ export interface StoreApi {
   // Customer accounts (the token is the access token kept in the httpOnly cookie).
   login(email: string, password: string): Promise<Result<LoginResult>>;
   register(input: { email: string; password: string; name?: string }): Promise<Result<RegisterResult>>;
+  getCollections(locale: Locale): Promise<CollectionLink[]>;
+  getWomenPage(locale: Locale): Promise<WomenPage>;
+  getMenPage(locale: Locale): Promise<MenPage>;
   getPages(locale: Locale): Promise<PageLink[]>;
   getPage(slug: string, locale: Locale): Promise<InfoPage | null>;
   getStoreInfo(locale: Locale): Promise<StoreInfo>;

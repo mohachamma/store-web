@@ -45,7 +45,7 @@ async function getAuthed<R>(path: string, token: string, params: Record<string, 
 const num = (n?: number) => (n === undefined ? undefined : String(n));
 /** Query-string parameters for the list / filters endpoints (sort and paging only apply to the list). */
 function listParams(q: import("./types").ProductQuery, paged: boolean): Record<string, string | undefined> {
-  const p: Record<string, string | undefined> = { q: q.q, category: q.category, size: q.size, color: q.color, minPrice: num(q.minPrice), maxPrice: num(q.maxPrice) };
+  const p: Record<string, string | undefined> = { q: q.q, category: q.category, audience: q.audience, size: q.size, color: q.color, minPrice: num(q.minPrice), maxPrice: num(q.maxPrice) };
   if (paged) Object.assign(p, { sort: q.sort, limit: num(q.limit), offset: num(q.offset) });
   return p;
 }
@@ -69,6 +69,9 @@ export const realApi: StoreApi = {
   createOrder: (body, token) => post("/orders", body, token),
   // An order page must always show the current status: never cached.
   getOrder: (n, token, locale) => get<Ret<"getOrder">>(`/orders/${n}`, locale, { token }, { fresh: true }),
+  getCollections: (locale) => must(get<Ret<"getCollections">>("/catalog/collections", locale)),
+  getMenPage: (locale) => must(get<Ret<"getMenPage">>("/catalog/men", locale)),
+  getWomenPage: (locale) => must(get<Ret<"getWomenPage">>("/catalog/women", locale)),
   getPages: (locale) => must(get<Ret<"getPages">>("/catalog/pages", locale)),
   getPage: (slug, locale) => get<Ret<"getPage">>(`/catalog/pages/${encodeURIComponent(slug)}`, locale),
   getStoreInfo: (locale) => must(get<Ret<"getStoreInfo">>("/catalog/store-info", locale)),

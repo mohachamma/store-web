@@ -225,6 +225,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/catalog/collections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Published collections in display order (for menus) */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Language of names and descriptions. Falls back to Arabic when a translation is missing. */
+                    locale?: "ar" | "fr" | "en";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CollectionLinks"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/catalog/collections/{slug}": {
         parameters: {
             query?: never;
@@ -293,6 +332,8 @@ export interface paths {
                     /** @description Category slug */
                     category?: string;
                     size?: string;
+                    /** @description Products for women (or men); unisex products appear in both */
+                    audience?: "women" | "men";
                     color?: string;
                     minPrice?: number | null;
                     maxPrice?: number | null;
@@ -343,6 +384,8 @@ export interface paths {
                     /** @description Category slug */
                     category?: string;
                     size?: string;
+                    /** @description Products for women (or men); unisex products appear in both */
+                    audience?: "women" | "men";
                     color?: string;
                     minPrice?: number | null;
                     maxPrice?: number | null;
@@ -1167,6 +1210,84 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["StoreInfo"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/women": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Texts and cover image of the Women's page (its products come from GET /catalog/products?audience=women) */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Language of names and descriptions. Falls back to Arabic when a translation is missing. */
+                    locale?: "ar" | "fr" | "en";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WomenPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/men": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Texts and cover image of the Men's page (its products come from GET /catalog/products?audience=men) */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Language of names and descriptions. Falls back to Arabic when a translation is missing. */
+                    locale?: "ar" | "fr" | "en";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MenPage"];
                     };
                 };
             };
@@ -4057,6 +4178,7 @@ export interface paths {
                     q?: string;
                     categoryId?: string;
                     status?: "published" | "draft";
+                    audience?: "women" | "men" | "unisex";
                     limit?: number;
                     offset?: number | null;
                 };
@@ -4415,6 +4537,97 @@ export interface paths {
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/products/audience": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set who several products are for (women / men / unisex) at once */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        ids: string[];
+                        /** @enum {string} */
+                        audience: "women" | "men" | "unisex";
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            updated: number;
+                        };
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -6645,6 +6858,270 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/women-page": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The Women's page texts, cover image and visibility */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminWomenPage"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        /** Save the Women's page (switch it off to hide the page and its menu link) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AdminWomenPage"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Ok"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/men-page": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The Men's page texts, cover image and visibility */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminMenPage"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        /** Save the Men's page (switch it off to hide the page and its menu link) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AdminMenPage"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Ok"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/pages": {
         parameters: {
             query?: never;
@@ -7074,6 +7551,10 @@ export interface components {
             subtitle: string | null;
             button: string;
         };
+        CollectionLinks: {
+            slug: string;
+            title: string;
+        }[];
         Collection: {
             slug: string;
             title: string;
@@ -7251,6 +7732,24 @@ export interface components {
             address: string | null;
             hours: string | null;
             whatsappUrl: string | null;
+        };
+        WomenPage: {
+            enabled: boolean;
+            title: string;
+            subtitle: string | null;
+            heroImage: {
+                url: string;
+                alt: string;
+            } | null;
+        };
+        MenPage: {
+            enabled: boolean;
+            title: string;
+            subtitle: string | null;
+            heroImage: {
+                url: string;
+                alt: string;
+            } | null;
         };
         CleanupResult: {
             expiredOrders: number;
@@ -7529,6 +8028,8 @@ export interface components {
             categoryName: string;
             isPublished: boolean;
             isNew: boolean;
+            /** @enum {string} */
+            audience: "women" | "men" | "unisex";
             price: number | null;
             compareAtPrice: number | null;
             totalStock: number;
@@ -7547,6 +8048,8 @@ export interface components {
             brandId: string | null;
             isPublished: boolean;
             isNew: boolean;
+            /** @enum {string} */
+            audience: "women" | "men" | "unisex";
             images: {
                 url: string;
             }[];
@@ -7575,6 +8078,11 @@ export interface components {
             isPublished: boolean;
             /** @default false */
             isNew: boolean;
+            /**
+             * @default unisex
+             * @enum {string}
+             */
+            audience: "women" | "men" | "unisex";
             /** @default [] */
             images: string[];
             /** @default [] */
@@ -7748,6 +8256,18 @@ export interface components {
                 email: string;
                 createdAt: string;
             }[];
+        };
+        AdminWomenPage: {
+            enabled: boolean;
+            title: components["schemas"]["I18n"];
+            subtitle: components["schemas"]["OptionalI18n"];
+            heroUrl: string | null;
+        };
+        AdminMenPage: {
+            enabled: boolean;
+            title: components["schemas"]["I18n"];
+            subtitle: components["schemas"]["OptionalI18n"];
+            heroUrl: string | null;
         };
         AdminInfoPage: {
             slug: string;

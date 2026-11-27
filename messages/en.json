@@ -250,5 +250,21 @@
     "hours": "Opening hours",
     "whatsapp": "Chat on WhatsApp",
     "rights": "To access, correct or delete your personal data, write to us using any of the means above."
+  },
+  "menu": {
+    "title": "Menu",
+    "open": "Open menu",
+    "close": "Close menu",
+    "home": "Home",
+    "shop": "All products",
+    "sale": "Sale",
+    "categories": "Categories",
+    "collections": "Collections",
+    "myspace": "My space",
+    "favorites": "Favorites",
+    "cart": "Cart",
+    "account": "My account and orders",
+    "info": "Information",
+    "contact": "Contact"
   }
 }
