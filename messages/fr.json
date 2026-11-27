@@ -69,7 +69,8 @@
     "favorite": "Ajouter aux favoris",
     "unfavorite": "Retirer des favoris",
     "image": "Image {index} sur {total}",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "color": "Couleur"
   },
   "cart": {
     "title": "Panier ({count})",
@@ -266,5 +267,27 @@
     "account": "Mon compte et mes commandes",
     "info": "Informations",
     "contact": "Contact"
+  },
+  "colors": {
+    "black": "Noir",
+    "white": "Blanc",
+    "cream": "Crème",
+    "beige": "Beige",
+    "sand": "Sable",
+    "stone": "Pierre",
+    "grey": "Gris",
+    "charcoal": "Anthracite",
+    "navy": "Marine",
+    "blue": "Bleu",
+    "denim": "Denim",
+    "red": "Rouge",
+    "burgundy": "Bordeaux",
+    "pink": "Rose",
+    "orange": "Orange",
+    "yellow": "Jaune",
+    "green": "Vert",
+    "olive": "Olive",
+    "brown": "Marron",
+    "purple": "Violet"
   }
 }

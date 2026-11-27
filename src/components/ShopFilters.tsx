@@ -5,6 +5,7 @@ import { useRef, useTransition } from "react";
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import type { CatalogFilters, SortKey } from "@/lib/api/types";
+import { colorLabel } from "@/lib/colors";
 import { formatDZD } from "@/lib/format";
 
 export interface ShopState {
@@ -25,6 +26,7 @@ const off = "border-line hover:border-ink";
 /** Filter bar for the shop page. The whole state lives in the URL, so results are shareable and the server renders them. */
 export function ShopFilters({ filters, state, basePath = "/search" }: { filters: CatalogFilters; state: ShopState; basePath?: string }) {
   const t = useTranslations("search");
+  const tc = useTranslations("colors");
   const locale = useLocale() as Locale;
   const router = useRouter();
   const dialog = useRef<HTMLDialogElement>(null);
@@ -133,8 +135,8 @@ export function ShopFilters({ filters, state, basePath = "/search" }: { filters:
               <legend className="label mb-2">{t("color")}</legend>
               <div className="flex flex-wrap gap-2">
                 <Choice name="color" value="" label={t("any")} checked={!state.color} />
-                {filters.colors.map((c) => (
-                  <Choice key={c} name="color" value={c} label={c} checked={state.color?.toLowerCase() === c.toLowerCase()} />
+                {filters.colorSwatches.map((c) => (
+                  <Choice key={c.name} name="color" value={c.name} label={colorLabel(tc, c.name)} dot={c.hex ?? "#d4d4d4"} checked={state.color?.toLowerCase() === c.name.toLowerCase()} />
                 ))}
               </div>
             </fieldset>
@@ -160,11 +162,11 @@ export function ShopFilters({ filters, state, basePath = "/search" }: { filters:
   );
 }
 
-function Choice({ name, value, label, checked }: { name: string; value: string; label: string; checked: boolean }) {
+function Choice({ name, value, label, checked, dot }: { name: string; value: string; label: string; checked: boolean; dot?: string }) {
   return (
     <label className="cursor-pointer">
       <input type="radio" name={name} value={value} defaultChecked={checked} className="peer sr-only" />
-      <span className="inline-block min-w-11 rounded-full border border-line px-4 py-2 text-center text-xs font-semibold transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink/30">{label}</span>
+      <span className="inline-flex min-w-11 items-center justify-center gap-2 rounded-full border border-line px-4 py-2 text-center text-xs font-semibold transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink/30">{dot ? <span className="size-3.5 rounded-full border border-black/20" style={{ background: dot }} /> : null}{label}</span>
     </label>
   );
 }

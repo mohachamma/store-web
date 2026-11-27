@@ -103,6 +103,8 @@ function toCategory(slug: string, locale: Locale): Category {
   return { slug, name: categories[slug]?.[locale] ?? slug };
 }
 
+const MOCK_HEX: Record<string, string> = { black: "#111111", cream: "#f1e9d8", sand: "#c9ad82", stone: "#bdb3a2", charcoal: "#3a3a3a", denim: "#4a6fa5", olive: "#6b6b3a", white: "#ffffff", red: "#c0392b" };
+
 function toProduct(s: Seed, locale: Locale): Product {
   const sizes = s.shoes ? SHOES : APPAREL;
   const name = s.name[locale];
@@ -115,13 +117,15 @@ function toProduct(s: Seed, locale: Locale): Product {
     image: img(s.art, 1, name),
     category: toCategory(s.category, locale),
     isNew: Boolean(s.isNew),
+    colors: [{ name: s.art.split("-")[1] ?? "default", hex: MOCK_HEX[s.art.split("-")[1] ?? ""] ?? null }],
     description: s.description[locale],
-    images: [1, 2, 3].map((n) => img(s.art, n, name)),
+    images: [1, 2, 3].map((n) => ({ ...img(s.art, n, name), color: null })),
     sizes,
     variants: sizes.map((size, i) => ({
       id: `v_${s.slug}_${size}`,
       size,
       color: s.art.split("-")[1] ?? "default",
+      colorHex: MOCK_HEX[s.art.split("-")[1] ?? ""] ?? null,
       stock: s.soldOut?.includes(size) ? 0 : 2 + ((i * 7) % 9),
       price: s.price,
       compareAtPrice: s.compareAt ?? null,
@@ -138,6 +142,7 @@ const summary = (p: Product): ProductSummary => ({
   image: p.image,
   category: p.category,
   isNew: p.isNew,
+  colors: [...new Map(p.variants.filter((v) => v.color).map((v) => [v.color, { name: v.color, hex: v.colorHex }])).values()],
 });
 
 const all = (locale: Locale) => seeds.map((s) => toProduct(s, locale));
@@ -338,6 +343,7 @@ export const mockApi: StoreApi = {
       categories,
       sizes,
       colors,
+      colorSwatches: colors.map((name) => ({ name, hex: MOCK_HEX[name] ?? null })),
       priceRange: priced.length ? { min: Math.min(...priced.map((p) => p.price)), max: Math.max(...priced.map((p) => p.price)) } : null,
     });
   },

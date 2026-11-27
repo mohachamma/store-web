@@ -5,11 +5,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { cart, cartCount, cartSubtotal, useCart } from "@/lib/cart";
+import { colorLabel } from "@/lib/colors";
 import { formatDZD } from "@/lib/format";
 import { BagIcon, MinusIcon, PlusIcon } from "./icons";
 
 export function CartView() {
   const t = useTranslations("cart");
+  const tc = useTranslations("colors");
   const locale = useLocale() as Locale;
   const lines = useCart();
   const count = cartCount(lines);
@@ -40,7 +42,7 @@ export function CartView() {
                   <Link href={`/products/${l.slug}`} className="label">
                     {l.name}
                   </Link>
-                  <p className="text-[11px] text-muted">{t("size", { size: l.size })}</p>
+                  <p className="text-[11px] text-muted">{t("size", { size: l.size })}{l.color ? ` · ${colorLabel(tc, l.color)}` : ""}</p>
                   <p className="text-[12px] font-semibold">{formatDZD(l.price * l.qty, locale)}</p>
                   <div className="mt-1 flex items-center gap-3">
                     <div className="flex items-center rounded-full border border-line">

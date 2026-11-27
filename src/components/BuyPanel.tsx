@@ -7,22 +7,35 @@ import type { Locale } from "@/i18n/routing";
 import type { Product } from "@/lib/api/types";
 import { cart } from "@/lib/cart";
 import { favorites, useFavorites } from "@/lib/favorites";
+import { colorLabel } from "@/lib/colors";
 import { formatDZD } from "@/lib/format";
 import { HeartIcon } from "./icons";
 import { Price } from "./Price";
 
 /** Name, price, black pill "Add to cart", round size chips and description. */
-export function BuyPanel({ product }: { product: Product }) {
+export function BuyPanel({ product, color, onColor }: { product: Product; color: string | null; onColor: (c: string) => void }) {
   const t = useTranslations("product");
+  const tc = useTranslations("colors");
   const locale = useLocale() as Locale;
   const favs = useFavorites();
   const isFav = favs.some((f) => f.id === product.id);
 
-  const firstAvailable = product.variants.find((v) => v.stock > 0)?.size ?? null;
-  const [size, setSize] = useState<string | null>(firstAvailable);
+  // One entry per color (its dot), and the variants (sizes) of the selected color.
+  const colors = product.variants.reduce<{ name: string; hex: string | null; inStock: boolean }[]>((list, v) => {
+    if (!v.color) return list;
+    const found = list.find((c) => c.name.toLowerCase() === v.color.toLowerCase());
+    if (found) found.inStock ||= v.stock > 0;
+    else list.push({ name: v.color, hex: v.colorHex, inStock: v.stock > 0 });
+    return list;
+  }, []);
+  const ofColor = product.variants.filter((v) => !color || !v.color || v.color.toLowerCase() === color.toLowerCase());
+  const firstAvailable = ofColor.find((v) => v.stock > 0)?.size ?? null;
+  const [picked, setSize] = useState<string | null>(null);
+  // Keep the chosen size when the new color has it; otherwise fall back to its first available size.
+  const size = picked && ofColor.some((v) => v.size === picked) ? picked : firstAvailable;
   const [needSize, setNeedSize] = useState(false);
   const [toast, setToast] = useState<"in" | "out" | null>(null);
-  const variant = product.variants.find((v) => v.size === size);
+  const variant = ofColor.find((v) => v.size === size);
 
   useEffect(() => {
     if (toast === "in") {
@@ -47,12 +60,13 @@ export function BuyPanel({ product }: { product: Product }) {
       name: product.name,
       image: product.image.url,
       size: variant.size,
+      color: variant.color || undefined,
       price: variant.price,
     });
     setToast("in");
   };
 
-  const soldOut = !firstAvailable;
+  const soldOut = !product.variants.some((v) => v.stock > 0);
 
   return (
     <div className="relative z-10 -mt-6 rounded-t-[28px] bg-paper px-5 pb-6 pt-6 shadow-[0_-12px_30px_-20px_rgba(0,0,0,.25)] md:mt-0 md:rounded-none md:px-0 md:pt-2 md:shadow-none">
@@ -82,12 +96,39 @@ export function BuyPanel({ product }: { product: Product }) {
         </div>
       </div>
 
+      {colors.length > 0 ? (
+        <fieldset className="mt-5">
+          <legend className="mb-2 text-[11px] text-muted">
+            {t("color")}{color ? `: ` : ""}
+            <span className="font-semibold text-ink">{color ? colorLabel(tc, color) : ""}</span>
+          </legend>
+          <div className="flex flex-wrap gap-3">
+            {colors.map((c) => {
+              const selected = !!color && c.name.toLowerCase() === color.toLowerCase();
+              return (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => onColor(c.name)}
+                  aria-pressed={selected}
+                  aria-label={colorLabel(tc, c.name)}
+                  title={colorLabel(tc, c.name)}
+                  className={`grid size-9 place-items-center rounded-full transition ${selected ? "ring-[1.5px] ring-ink ring-offset-2" : "ring-1 ring-transparent hover:ring-line hover:ring-offset-2"} ${c.inStock ? "" : "opacity-40"}`}
+                >
+                  <span className="size-7 rounded-full border border-black/15" style={{ background: c.hex ?? "#d4d4d4" }} />
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      ) : null}
+
       <fieldset className="mt-5">
         <legend className={`mb-2 text-[11px] ${needSize ? "text-danger" : "text-muted"}`}>
           {needSize ? t("selectSize") : t("size")}
         </legend>
         <div className="flex flex-wrap gap-2.5">
-          {product.variants.map((v) => {
+          {ofColor.map((v) => {
             const selected = v.size === size;
             const out = v.stock <= 0;
             return (
@@ -139,7 +180,7 @@ export function BuyPanel({ product }: { product: Product }) {
               <p className="text-[10px] text-muted">{t("added")}</p>
               <p className="label">{product.name}</p>
               <p className="text-[11px] text-muted">
-                {t("size")}: {variant.size}
+                {t("size")}: {variant.size}{variant.color ? ` · ${colorLabel(tc, variant.color)}` : ""}
               </p>
               <p className="text-[12px] font-semibold">{formatDZD(variant.price, locale)}</p>
             </div>

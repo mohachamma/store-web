@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { BuyPanel } from "@/components/BuyPanel";
+import { ProductView } from "@/components/ProductView";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
-import { ProductGallery } from "@/components/ProductGallery";
 import { Row } from "@/components/Row";
 import { JsonLd } from "@/components/JsonLd";
 import { absoluteUrl, pageMetadata } from "@/config/site";
@@ -80,8 +79,7 @@ export default async function ProductPage({ params }: Props) {
       <Header variant="detail" />
       <main>
         <div className="mx-auto grid max-w-6xl md:grid-cols-[1.15fr_1fr] md:gap-12 md:px-6 md:pt-4">
-          <ProductGallery images={product.images} slug={product.slug} />
-          <BuyPanel product={product} />
+          <ProductView product={product} />
         </div>
         {related.length ? (
           <div className="mt-6">

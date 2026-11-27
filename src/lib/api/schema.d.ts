@@ -7501,6 +7501,10 @@ export interface components {
             image: components["schemas"]["Image"];
             category: components["schemas"]["CategoryRef"];
             isNew: boolean;
+            colors: {
+                name: string;
+                hex: string | null;
+            }[];
         };
         Brand: {
             /** Format: uuid */
@@ -7571,6 +7575,10 @@ export interface components {
             }[];
             sizes: string[];
             colors: string[];
+            colorSwatches: {
+                name: string;
+                hex: string | null;
+            }[];
             priceRange: {
                 min: number;
                 max: number;
@@ -7578,7 +7586,9 @@ export interface components {
         };
         Product: components["schemas"]["ProductSummary"] & {
             description: string;
-            images: components["schemas"]["Image"][];
+            images: (components["schemas"]["Image"] & {
+                color: string | null;
+            })[];
             sizes: string[];
             variants: components["schemas"]["Variant"][];
         };
@@ -7587,6 +7597,7 @@ export interface components {
             id: string;
             size: string;
             color: string;
+            colorHex: string | null;
             stock: number;
             price: number;
             compareAtPrice: number | null;
@@ -8054,12 +8065,14 @@ export interface components {
             audience: "women" | "men" | "unisex";
             images: {
                 url: string;
+                color: string | null;
             }[];
             variants: {
                 /** Format: uuid */
                 id: string;
                 size: string;
                 color: string;
+                colorHex: string | null;
                 sku: string | null;
                 stock: number;
                 price: number;
@@ -8087,6 +8100,7 @@ export interface components {
             audience: "women" | "men" | "unisex";
             /** @default [] */
             images: string[];
+            imageColors?: (string | null)[];
             /** @default [] */
             variants: components["schemas"]["VariantInput"][];
         };
@@ -8096,6 +8110,8 @@ export interface components {
             size: string;
             /** @default  */
             color: string;
+            /** @default null */
+            colorHex: string | null;
             /** @default null */
             sku: string | null;
             stock: number;
