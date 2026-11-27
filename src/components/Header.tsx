@@ -1,5 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { api } from "@/lib/api";
 import { BackLink } from "./BackLink";
 import { CartBadge } from "./CartBadge";
 import { BagIcon, HeartIcon, SearchIcon, UserIcon } from "./icons";
@@ -12,6 +15,8 @@ import { Wordmark } from "./Wordmark";
  */
 export async function Header({ variant = "home" }: { variant?: "home" | "detail" }) {
   const t = await getTranslations("nav");
+  // The Women's page link and its label come from the dashboard; hidden while the page is switched off.
+  const women = await api.getWomenPage((await getLocale()) as Locale).catch(() => null);
   const iconBtn = "relative grid h-10 w-10 place-items-center rounded-full text-ink transition hover:bg-mist";
 
   return (
@@ -23,6 +28,7 @@ export async function Header({ variant = "home" }: { variant?: "home" | "detail"
           ) : (
             <nav className="hidden items-center gap-6 md:flex" aria-label={t("menu")}>
               <Link href="/" className="label hover:opacity-60">{t("shop")}</Link>
+              {women?.enabled ? <Link href="/women" className="label hover:opacity-60">{women.title}</Link> : null}
               <Link href="/collections/winter" className="label hover:opacity-60">{t("collections")}</Link>
               <Link href="/sale" className="label text-danger hover:opacity-60">{t("sale")}</Link>
             </nav>
