@@ -3,6 +3,7 @@ import { ViewTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { ProductSummary } from "@/lib/api/types";
+import { ColorDots } from "./ColorDots";
 import { Price } from "./Price";
 
 /** Shared product card: photo on light grey, small bold uppercase name, price. */
@@ -54,6 +55,7 @@ export function ProductCard({
       <div className="mt-2.5 space-y-1 px-0.5">
         <h3 className="label line-clamp-2">{product.name}</h3>
         <Price value={product.price} compareAt={product.compareAtPrice} className="text-[11px] text-muted" />
+        <ColorDots colors={product.colors} />
       </div>
     </Link>
   );

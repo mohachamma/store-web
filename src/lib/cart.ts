@@ -3,7 +3,7 @@
 import { createPersistedStore } from "./persisted-store";
 
 export interface CartLine {
-  /** productId + size */
+  /** The variant id (a size in a given color is one variant). */
   key: string;
   productId: string;
   variantId: string;
@@ -11,6 +11,8 @@ export interface CartLine {
   name: string;
   image: string;
   size: string;
+  /** Color name for display (empty when the product has no colors). */
+  color?: string;
   /** Display price only — the API recomputes totals at checkout. */
   price: number;
   qty: number;
@@ -22,7 +24,7 @@ export const useCart = store.useStore;
 
 export const cart = {
   add(line: Omit<CartLine, "key" | "qty">, qty = 1) {
-    const key = `${line.productId}:${line.size}`;
+    const key = line.variantId;
     store.set((lines) => {
       const found = lines.find((l) => l.key === key);
       return found

@@ -4,7 +4,8 @@ import { setFavoriteAction } from "@/app/[locale]/account/actions";
 import type { ProductSummary } from "./api/types";
 import { createPersistedStore } from "./persisted-store";
 
-export type FavoriteItem = Pick<ProductSummary, "id" | "slug" | "name" | "price" | "compareAtPrice" | "image" | "isNew" | "category">;
+/** Colors are optional: favorites saved before color dots existed do not have them. */
+export type FavoriteItem = Pick<ProductSummary, "id" | "slug" | "name" | "price" | "compareAtPrice" | "image" | "isNew" | "category"> & { colors?: ProductSummary["colors"] };
 
 const store = createPersistedStore<FavoriteItem[]>("store.favorites.v1", []);
 

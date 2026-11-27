@@ -69,7 +69,8 @@
     "favorite": "أضف إلى المفضلة",
     "unfavorite": "إزالة من المفضلة",
     "image": "الصورة {index} من {total}",
-    "new": "جديد"
+    "new": "جديد",
+    "color": "اللون"
   },
   "cart": {
     "title": "سلة التسوق ({count})",
@@ -266,5 +267,27 @@
     "account": "حسابي وطلباتي",
     "info": "معلومات",
     "contact": "تواصل معنا"
+  },
+  "colors": {
+    "black": "أسود",
+    "white": "أبيض",
+    "cream": "كريمي",
+    "beige": "بيج",
+    "sand": "رملي",
+    "stone": "حجري",
+    "grey": "رمادي",
+    "charcoal": "فحمي",
+    "navy": "كحلي",
+    "blue": "أزرق",
+    "denim": "جينز",
+    "red": "أحمر",
+    "burgundy": "عنابي",
+    "pink": "وردي",
+    "orange": "برتقالي",
+    "yellow": "أصفر",
+    "green": "أخضر",
+    "olive": "زيتي",
+    "brown": "بني",
+    "purple": "بنفسجي"
   }
 }
