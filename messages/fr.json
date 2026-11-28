@@ -243,7 +243,8 @@
       "confirmed": "Confirmée",
       "shipped": "En route",
       "delivered": "Livrée"
-    }
+    },
+    "trackAtCarrier": "Suivre le colis sur le site du transporteur"
   },
   "newsletter": {
     "email": "Votre e-mail",

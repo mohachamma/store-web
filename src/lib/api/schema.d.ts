@@ -6421,7 +6421,7 @@ export interface paths {
                 };
             };
         };
-        /** Choose the delivery company. New confirmations use it at once; parcels already sent stay with their company. */
+        /** Choose the delivery company and/or save the companies' tracking page links. New confirmations use the company at once; parcels already sent stay with their company. */
         put: {
             parameters: {
                 query?: never;
@@ -6432,7 +6432,10 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        provider: string;
+                        provider?: string;
+                        trackingUrls?: {
+                            [key: string]: "" | string;
+                        };
                     };
                 };
             };
@@ -8318,6 +8321,7 @@ export interface components {
             total: number;
             trackingNumber: string | null;
             deliveryStatus: string | null;
+            carrierTrackingUrl: string | null;
             whatsappConfirmUrl: string | null;
             createdAt: string;
             items: {
@@ -8546,6 +8550,7 @@ export interface components {
             discountCode: string | null;
             deliveryCompany: string | null;
             deliveryStatus: string | null;
+            carrierTrackingUrl: string | null;
             confirmedAt: string | null;
             items: {
                 /** Format: uuid */
@@ -8934,6 +8939,9 @@ export interface components {
         };
         AdminDelivery: {
             provider: string;
+            trackingUrls: {
+                [key: string]: string;
+            };
             providers: {
                 id: string;
                 name: string;
@@ -9028,7 +9036,7 @@ export interface components {
             siteTitle?: components["schemas"]["OptionalI18n"];
             siteDescription?: components["schemas"]["OptionalI18n"];
         };
-        /** @description Placeholders: {name} {number} {total} {tracking} {link}. An empty text brings back the default one. */
+        /** @description Placeholders: {name} {number} {total} {tracking} {link} {carrierLink}. An empty text brings back the default one. */
         WhatsappMessages: {
             ask: {
                 ar: string;

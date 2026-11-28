@@ -243,7 +243,8 @@
       "confirmed": "Confirmed",
       "shipped": "On its way",
       "delivered": "Delivered"
-    }
+    },
+    "trackAtCarrier": "Track the parcel on the carrier's site"
   },
   "newsletter": {
     "email": "Your email",

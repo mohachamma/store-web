@@ -401,7 +401,7 @@ export const mockApi: StoreApi = {
     orders.set(`${orderNumber}:${token}`, {
       orderNumber, status: "pending", paymentMethod: "cod", paymentStatus: "unpaid", deliveryType: body.deliveryType,
       wilaya: wilayas.find((w) => w.code === body.wilayaCode)?.ar ?? "", subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee,
-      discountTotal: priced.value.discountTotal, total: priced.value.total, trackingNumber: null, deliveryStatus: null, whatsappConfirmUrl: `https://wa.me/213550000000?text=${encodeURIComponent(`مرحباً، أؤكد طلبي رقم #${orderNumber} ✅`)}`, createdAt: new Date().toISOString(),
+      discountTotal: priced.value.discountTotal, total: priced.value.total, trackingNumber: null, deliveryStatus: null, carrierTrackingUrl: null, whatsappConfirmUrl: `https://wa.me/213550000000?text=${encodeURIComponent(`مرحباً، أؤكد طلبي رقم #${orderNumber} ✅`)}`, createdAt: new Date().toISOString(),
       items: priced.value.items.map(({ name, size, color, unitPrice, quantity, lineTotal }) => ({ name, size, color, unitPrice, quantity, lineTotal })),
     });
     return { ok: true, value: { orderNumber, token, status: "pending", paymentMethod: "cod", checkoutUrl: null, subtotal: priced.value.subtotal, shippingFee: priced.value.shippingFee, discountTotal: priced.value.discountTotal, total: priced.value.total } };

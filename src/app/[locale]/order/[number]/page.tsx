@@ -72,6 +72,11 @@ export default async function OrderPage({ params, searchParams }: Props) {
               {t("tracking")}: <strong dir="ltr">{order.trackingNumber}</strong>
             </p>
           ) : null}
+          {order.carrierTrackingUrl ? (
+            <a href={order.carrierTrackingUrl} target="_blank" rel="noopener noreferrer" className="flex h-11 items-center justify-center rounded-full border border-ink px-5 text-xs font-bold transition hover:bg-ink hover:text-paper">
+              {t("trackAtCarrier")}
+            </a>
+          ) : null}
           {order.deliveryStatus && order.deliveryStatus !== "created" && order.deliveryStatus !== "unknown" ? (
             <p className="text-sm text-muted">
               {t("carrierStatus")}: <strong className="text-ink">{order.deliveryStatus}</strong>
