@@ -233,7 +233,18 @@
       "unpaid": "The payment is not complete. We will contact you.",
       "failed": "The payment did not go through. We will call you to finish the order.",
       "refunded": "The amount was refunded."
-    }
+    },
+    "whatsappConfirm": "Confirm my order on WhatsApp",
+    "whatsappHint": "Tap the button and send the ready-made message so we can ship quickly. You can also wait for our call.",
+    "carrierStatus": "Parcel status at the carrier",
+    "timeline": {
+      "label": "Order steps",
+      "pending": "Order received",
+      "confirmed": "Confirmed",
+      "shipped": "On its way",
+      "delivered": "Delivered"
+    },
+    "trackAtCarrier": "Track the parcel on the carrier's site"
   },
   "newsletter": {
     "email": "Your email",

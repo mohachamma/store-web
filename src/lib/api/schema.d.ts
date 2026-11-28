@@ -3043,7 +3043,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Move an order forward: confirmed → shipped → delivered / returned, or cancel (restores the stock) */
+        /** Move an order forward: confirmed → shipped → delivered / returned (the goods go back to stock unless the profit settings say returned goods are lost), or cancel (restores the stock) */
         post: {
             parameters: {
                 query?: {
@@ -4837,6 +4837,7 @@ export interface paths {
                             price?: number;
                             compareAtPrice?: number | null;
                             stock?: number;
+                            costPrice?: number | null;
                         }[];
                     };
                 };
@@ -5010,6 +5011,8 @@ export interface paths {
                             code: number;
                             homeFee?: number;
                             deskFee?: number;
+                            homeCost?: number;
+                            deskCost?: number;
                             active?: boolean;
                         }[];
                     };
@@ -5865,6 +5868,486 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/profit-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Return fee, lost returned goods and card commission used in the profit calculation */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProfitSettings"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        /** Save the profit settings */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ProfitSettings"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProfitSettings"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/expenses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Expenses in a period (default: this month) */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Expense"][];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Record an expense */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ExpenseInput"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Expense"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/expenses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit an expense */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ExpenseInput"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Expense"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Delete an expense */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Ok"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/profit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Net profit for a period (default: this month, Algeria time). Counts parcels by the day they were delivered or returned: sales + delivery fees collected − product cost − delivery cost − card fees − losses on returns − expenses. */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                    /** @description Language of names and descriptions. Falls back to Arabic when a translation is missing. */
+                    locale?: "ar" | "fr" | "en";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProfitReport"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/delivery": {
         parameters: {
             query?: never;
@@ -5938,7 +6421,7 @@ export interface paths {
                 };
             };
         };
-        /** Choose the delivery company. New confirmations use it at once; parcels already sent stay with their company. */
+        /** Choose the delivery company and/or save the companies' tracking page links. New confirmations use the company at once; parcels already sent stay with their company. */
         put: {
             parameters: {
                 query?: never;
@@ -5949,7 +6432,10 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        provider: string;
+                        provider?: string;
+                        trackingUrls?: {
+                            [key: string]: "" | string;
+                        };
                     };
                 };
             };
@@ -7404,6 +7890,138 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/whatsapp-messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The three WhatsApp message texts (defaults filled in) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WhatsappMessages"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        /** Save the WhatsApp message texts */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["WhatsappMessages"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["WhatsappMessages"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7702,6 +8320,9 @@ export interface components {
             discountTotal: number;
             total: number;
             trackingNumber: string | null;
+            deliveryStatus: string | null;
+            carrierTrackingUrl: string | null;
+            whatsappConfirmUrl: string | null;
             createdAt: string;
             items: {
                 name: string;
@@ -7929,6 +8550,7 @@ export interface components {
             discountCode: string | null;
             deliveryCompany: string | null;
             deliveryStatus: string | null;
+            carrierTrackingUrl: string | null;
             confirmedAt: string | null;
             items: {
                 /** Format: uuid */
@@ -7947,8 +8569,11 @@ export interface components {
                 daira: string | null;
                 address: string;
                 whatsappUrl: string;
+                whatsappAskUrl: string;
                 telUrl: string;
             } | null;
+            /** @description Only in the answer to 'confirm': a WhatsApp link with the tracking number and page already typed for the customer (his phone is erased right after, so this is the only chance) */
+            whatsappTrackingUrl: string | null;
         };
         AdminOverview: {
             newOrdersToday: number;
@@ -7977,6 +8602,7 @@ export interface components {
                 variantId: string;
                 productName: string;
                 size: string;
+                color: string;
                 stock: number;
                 image: string;
             }[];
@@ -8047,6 +8673,10 @@ export interface components {
             compareAtPrice: number | null;
             totalStock: number;
             variantCount: number;
+            soldOut: {
+                color: string;
+                size: string;
+            }[];
             image: string | null;
         };
         AdminProduct: {
@@ -8077,6 +8707,7 @@ export interface components {
                 stock: number;
                 price: number;
                 compareAtPrice: number | null;
+                costPrice: number | null;
             }[];
         };
         ProductInput: {
@@ -8118,6 +8749,8 @@ export interface components {
             price: number;
             /** @default null */
             compareAtPrice: number | null;
+            /** @default null */
+            costPrice: number | null;
         };
         AdminVariantList: {
             items: components["schemas"]["AdminVariantRow"][];
@@ -8135,6 +8768,7 @@ export interface components {
             stock: number;
             price: number;
             compareAtPrice: number | null;
+            costPrice: number | null;
         };
         AdminShipping: {
             freeShippingOver: number | null;
@@ -8146,6 +8780,8 @@ export interface components {
             nameFr: string;
             homeFee: number;
             deskFee: number;
+            homeCost: number;
+            deskCost: number;
             active: boolean;
         };
         AdminDiscountCode: {
@@ -8221,8 +8857,91 @@ export interface components {
              */
             endsAt: string | null;
         };
+        ProfitSettings: {
+            returnFee: number;
+            returnedItemsLost: boolean;
+            cardFeePercent: number;
+        };
+        Expense: {
+            /** Format: uuid */
+            id: string;
+            spentOn: string;
+            /** @enum {string} */
+            category: "ads" | "packaging" | "salaries" | "rent" | "other";
+            platform: string | null;
+            amount: number;
+            note: string | null;
+        };
+        ExpenseInput: {
+            spentOn: string;
+            /** @enum {string} */
+            category: "ads" | "packaging" | "salaries" | "rent" | "other";
+            /** @default null */
+            platform: string | null;
+            amount: number;
+            /** @default null */
+            note: string | null;
+        };
+        ProfitReport: {
+            from: string;
+            to: string;
+            delivered: {
+                orders: number;
+                /** @description Goods sold, after discount codes (without delivery fees) */
+                sales: number;
+                /** @description Delivery fees paid by customers */
+                shippingCollected: number;
+                /** @description What the sold goods cost us */
+                productCost: number;
+                /** @description What the delivery company charged us */
+                deliveryCost: number;
+                /** @description Commission on card payments */
+                cardFees: number;
+            };
+            returned: {
+                orders: number;
+                /** @description Delivery fees paid for parcels that came back */
+                deliveryLoss: number;
+                returnFees: number;
+                /** @description Cost of returned goods that cannot be resold (only when the setting says so) */
+                lostGoods: number;
+            };
+            expenses: {
+                total: number;
+                byCategory: {
+                    /** @enum {string} */
+                    category: "ads" | "packaging" | "salaries" | "rent" | "other";
+                    amount: number;
+                }[];
+            };
+            netProfit: number;
+            /** @description Returned parcels out of delivered + returned */
+            returnRatePercent: number;
+            warnings: {
+                itemsWithoutCost: number;
+                activeWilayasWithoutDeliveryCost: number;
+            };
+            /** @description Profit per product, best first. Order-level amounts (delivery fees, delivery cost, discounts, return costs) are shared between the products of a parcel in proportion to their value. */
+            byProduct: {
+                key: string;
+                name: string;
+                unitsSold: number;
+                unitsReturned: number;
+                sales: number;
+                productCost: number;
+                /** @description Share of the delivery cost of the parcels that carried this product */
+                deliveryCost: number;
+                /** @description Share of what the returned parcels cost (delivery + return fee [+ goods if lost]); this is the return cost carried by the product even when it is resold later */
+                returnLoss: number;
+                /** @description Before ads, other expenses and card fees */
+                profit: number;
+            }[];
+        };
         AdminDelivery: {
             provider: string;
+            trackingUrls: {
+                [key: string]: string;
+            };
             providers: {
                 id: string;
                 name: string;
@@ -8316,6 +9035,24 @@ export interface components {
             hours: components["schemas"]["OptionalI18n"];
             siteTitle?: components["schemas"]["OptionalI18n"];
             siteDescription?: components["schemas"]["OptionalI18n"];
+        };
+        /** @description Placeholders: {name} {number} {total} {tracking} {link} {carrierLink}. An empty text brings back the default one. */
+        WhatsappMessages: {
+            ask: {
+                ar: string;
+                fr: string;
+                en: string;
+            };
+            confirm: {
+                ar: string;
+                fr: string;
+                en: string;
+            };
+            tracking: {
+                ar: string;
+                fr: string;
+                en: string;
+            };
         };
     };
     responses: never;
