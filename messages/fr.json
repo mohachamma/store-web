@@ -233,6 +233,16 @@
       "unpaid": "Le paiement n'est pas terminé. Nous vous contacterons.",
       "failed": "Le paiement n'a pas abouti. Nous vous appellerons pour finaliser.",
       "refunded": "Le montant a été remboursé."
+    },
+    "whatsappConfirm": "Confirmer ma commande sur WhatsApp",
+    "whatsappHint": "Appuyez sur le bouton et envoyez le message déjà rédigé pour que nous expédiions vite. Vous pouvez aussi attendre notre appel.",
+    "carrierStatus": "Statut du colis chez le transporteur",
+    "timeline": {
+      "label": "Étapes de la commande",
+      "pending": "Commande reçue",
+      "confirmed": "Confirmée",
+      "shipped": "En route",
+      "delivered": "Livrée"
     }
   },
   "newsletter": {

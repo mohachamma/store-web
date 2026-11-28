@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AutoRefresh } from "@/components/AutoRefresh";
 import { Header } from "@/components/Header";
+import { OrderTimeline } from "@/components/OrderTimeline";
 import { Price } from "@/components/Price";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -26,6 +28,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
   return (
     <>
       <Header variant="detail" />
+      {order.status === "cancelled" || order.status === "returned" || order.status === "delivered" ? null : <AutoRefresh />}
       <main className="mx-auto max-w-2xl space-y-6 px-4 pb-12 pt-6 md:px-6">
         <div className="space-y-2 text-center">
           <span className="mx-auto grid size-14 place-items-center rounded-full bg-ink text-paper" aria-hidden>
@@ -35,7 +38,22 @@ export default async function OrderPage({ params, searchParams }: Props) {
           <p className="text-sm text-muted">
             {t("number")} <strong className="text-ink" dir="ltr">#{order.orderNumber}</strong> · {t("keep")}
           </p>
-          <p className="mx-auto max-w-md text-sm">{order.paymentMethod === "chargily" ? t("cardCallNote") : t("callNote")}</p>
+          {order.status === "pending" && order.whatsappConfirmUrl ? (
+            <div className="mx-auto max-w-md space-y-2 pt-1">
+              <a
+                href={order.whatsappConfirmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#128c4a] px-6 text-sm font-bold text-white transition hover:bg-[#128c4a]/90 active:scale-[.98]"
+              >
+                <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+                {t("whatsappConfirm")}
+              </a>
+              <p className="text-xs text-muted">{t("whatsappHint")}</p>
+            </div>
+          ) : (
+            <p className="mx-auto max-w-md text-sm">{order.paymentMethod === "chargily" ? t("cardCallNote") : t("callNote")}</p>
+          )}
           {order.paymentMethod === "chargily" && order.status === "pending" ? (
             <p role="status" className={`mx-auto max-w-md rounded-xl px-4 py-3 text-sm ${order.paymentStatus === "paid" ? "bg-emerald-50 text-emerald-800" : "bg-mist"}`}>
               {t(`pay.${order.paymentStatus}`)}
@@ -48,9 +66,15 @@ export default async function OrderPage({ params, searchParams }: Props) {
             <span className="rounded-full bg-mist px-3 py-1 text-xs font-semibold">{t(`status.${order.status}`)}</span>
             <span className="text-muted">{t("deliveryTo", { wilaya: order.wilaya })} · {t(order.deliveryType)}</span>
           </div>
+          <OrderTimeline status={order.status} />
           {order.trackingNumber ? (
             <p className="text-sm">
               {t("tracking")}: <strong dir="ltr">{order.trackingNumber}</strong>
+            </p>
+          ) : null}
+          {order.deliveryStatus && order.deliveryStatus !== "created" && order.deliveryStatus !== "unknown" ? (
+            <p className="text-sm text-muted">
+              {t("carrierStatus")}: <strong className="text-ink">{order.deliveryStatus}</strong>
             </p>
           ) : null}
 
