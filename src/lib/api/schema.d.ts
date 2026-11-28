@@ -6348,6 +6348,72 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/ads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Results per ad campaign for the orders placed in a period (default: this month, Algeria time): orders, delivered / returned, sales, profit before ads, ad spend (expenses with the same platform and campaign), net profit, return on ad spend. */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdsReport"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/delivery": {
         parameters: {
             query?: never;
@@ -8303,6 +8369,13 @@ export interface components {
              * @enum {string}
              */
             locale: "ar" | "fr" | "en";
+            attribution?: components["schemas"]["Attribution"];
+        };
+        Attribution: {
+            source?: string | null;
+            medium?: string | null;
+            campaign?: string | null;
+            content?: string | null;
         };
         OrderView: {
             orderNumber: number;
@@ -8542,6 +8615,12 @@ export interface components {
             createdAt: string;
             customerName: string | null;
             customerPhone: string | null;
+            ad: {
+                source: string | null;
+                medium: string | null;
+                campaign: string | null;
+                content: string | null;
+            } | null;
         };
         AdminOrderDetail: components["schemas"]["AdminOrderRow"] & {
             subtotal: number;
@@ -8869,6 +8948,7 @@ export interface components {
             /** @enum {string} */
             category: "ads" | "packaging" | "salaries" | "rent" | "other";
             platform: string | null;
+            campaign: string | null;
             amount: number;
             note: string | null;
         };
@@ -8878,6 +8958,8 @@ export interface components {
             category: "ads" | "packaging" | "salaries" | "rent" | "other";
             /** @default null */
             platform: string | null;
+            /** @default null */
+            campaign: string | null;
             amount: number;
             /** @default null */
             note: string | null;
@@ -8936,6 +9018,42 @@ export interface components {
                 /** @description Before ads, other expenses and card fees */
                 profit: number;
             }[];
+        };
+        AdsReport: {
+            from: string;
+            to: string;
+            /** @description Best net profit first. The row with an empty source and campaign is the orders that came without any ad tag. */
+            campaigns: {
+                /** @description Platform (facebook, tiktok…); empty for orders without ad tags */
+                source: string;
+                /** @description Campaign name; empty when the ad link had none */
+                campaign: string;
+                /** @description Orders placed in the period (cancelled ones excluded) */
+                orders: number;
+                delivered: number;
+                returned: number;
+                /** @description Pending, confirmed or shipped: not counted in the money yet */
+                inProgress: number;
+                /** @description Delivered orders: goods + delivery fees collected */
+                sales: number;
+                /** @description Delivered sales − product cost − delivery cost − return losses, before the ad spend */
+                profit: number;
+                /** @description Ad expenses of the period with the same platform and campaign */
+                spend: number;
+                /** @description profit − spend */
+                netProfit: number;
+                /** @description Sales ÷ spend (2 = every 1 DA of ads brought 2 DA of sales); null without spend */
+                roas: number | null;
+                /** @description spend ÷ orders */
+                costPerOrder: number | null;
+            }[];
+            totals: {
+                orders: number;
+                sales: number;
+                profit: number;
+                spend: number;
+                netProfit: number;
+            };
         };
         AdminDelivery: {
             provider: string;
