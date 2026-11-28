@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState, useTransition } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { readAttribution } from "@/lib/attribution";
 import { checkoutProfileAction, communesAction, placeOrderAction, quoteAction } from "@/app/[locale]/checkout/actions";
 import type { Commune, OrderQuote, ShippingRules, Wilaya } from "@/lib/api/types";
 import { cart, cartSubtotal, useCart } from "@/lib/cart";
@@ -83,6 +84,7 @@ export function CheckoutForm({ wilayas, rules, cardAvailable }: { wilayas: Wilay
         discountCode: appliedCode,
         paymentMethod: method,
         locale,
+        attribution: readAttribution(),
         customer: { name: String(f.get("name")), phone: String(f.get("phone")), communeId: Number(communeId), address: String(f.get("address")) },
       });
       if (!r.ok) return setError(errorText(r.code));

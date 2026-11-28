@@ -5,6 +5,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import { Footer } from "@/components/Footer";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { brand } from "@/config/brand";
@@ -49,6 +50,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <body className="min-h-svh pb-safe-tabbar md:pb-0">
         <NextIntlClientProvider>
           <AnnouncementBar text={site.announcement} />
+          <AttributionCapture />
           {children}
           <Footer />
           <MobileTabBar />
