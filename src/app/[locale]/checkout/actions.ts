@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import type { Locale } from "@/i18n/routing";
 import { api } from "@/lib/api";
 import { getSessionToken } from "@/lib/session";
@@ -16,7 +17,10 @@ export async function quoteAction(input: QuoteInput) {
 
 export async function placeOrderAction(body: CreateOrderBody) {
   // A signed-in customer's order is linked to their account (history); guests order exactly as before.
-  return api.createOrder(body, await getSessionToken());
+  // The visitor's address (as the hosting platform saw it) lets the API spot several numbers ordering from one connection; it keeps only a one-way fingerprint.
+  const h = await headers();
+  const ip = h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  return api.createOrder(body, await getSessionToken(), { ip });
 }
 
 /** Name and phone saved in the customer's account, to pre-fill checkout. Null for guests. */

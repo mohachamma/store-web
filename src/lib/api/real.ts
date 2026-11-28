@@ -21,16 +21,26 @@ async function must<R>(p: Promise<R | null>): Promise<R> {
   return v;
 }
 
-async function send<R>(method: string, path: string, body: unknown, token?: string | null): Promise<{ ok: true; value: R } | { ok: false; code: string; message: string }> {
+async function send<R>(method: string, path: string, body: unknown, token?: string | null, extra: Record<string, string> = {}): Promise<{ ok: true; value: R } | { ok: false; code: string; message: string }> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
+  Object.assign(headers, extra);
   const res = await fetch(`${BASE}${path}`, { method, cache: "no-store", headers, body: body === undefined ? undefined : JSON.stringify(body) });
   if (res.ok) return { ok: true, value: (await res.json()) as R };
   const err = (await res.json().catch(() => null)) as { error?: { code?: string; message?: string } } | null;
   return { ok: false, code: err?.error?.code ?? `http_${res.status}`, message: err?.error?.message ?? "Request failed" };
 }
 
-const post = <R>(path: string, body: unknown, token?: string | null) => send<R>("POST", path, body, token);
+/**
+ * The visitor's address, for the API's one-way "same connection" fingerprint (never stored as an address; erased after 90 days).
+ * The API only believes it when we prove who we are with the shared secret STOREFRONT_SECRET (server-side only, same value as in store-api).
+ */
+const forwardClient = (client?: { ip?: string | null }): Record<string, string> => {
+  const secret = process.env.STOREFRONT_SECRET;
+  return secret && client?.ip ? { "x-client-ip": client.ip, "x-storefront-secret": secret } : {};
+};
+
+const post = <R>(path: string, body: unknown, token?: string | null, extra?: Record<string, string>) => send<R>("POST", path, body, token, extra);
 
 /** Signed-in GET: always fresh; null when the token is not (or no longer) valid. */
 async function getAuthed<R>(path: string, token: string, params: Record<string, string> = {}): Promise<R | null> {
@@ -66,7 +76,7 @@ export const realApi: StoreApi = {
   getShippingRules: async () => (await get<Ret<"getShippingRules">>("/shipping/rules", "ar")) ?? { freeShippingOver: null },
   getPaymentMethods: async () => (await get<Ret<"getPaymentMethods">>("/payments/methods", "ar")) ?? { cod: true, card: false },
   quote: (input) => post("/orders/quote", input),
-  createOrder: (body, token) => post("/orders", body, token),
+  createOrder: (body, token, client) => post("/orders", body, token, forwardClient(client)),
   // An order page must always show the current status: never cached.
   getOrder: (n, token, locale) => get<Ret<"getOrder">>(`/orders/${n}`, locale, { token }, { fresh: true }),
   getCollections: (locale) => must(get<Ret<"getCollections">>("/catalog/collections", locale)),

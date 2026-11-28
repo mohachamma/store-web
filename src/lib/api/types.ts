@@ -85,7 +85,8 @@ export interface StoreApi {
   getPaymentMethods(): Promise<PaymentMethods>;
   quote(input: QuoteInput): Promise<Result<OrderQuote>>;
   /** `token`: the signed-in customer's access token, so the order shows up in their history. */
-  createOrder(body: CreateOrderBody, token?: string | null): Promise<Result<OrderCreated>>;
+  /** `client.ip`: the visitor's address as seen by the storefront's server (forwarded to the API only when STOREFRONT_SECRET is set). */
+  createOrder(body: CreateOrderBody, token?: string | null, client?: { ip?: string | null }): Promise<Result<OrderCreated>>;
   getOrder(orderNumber: number, token: string, locale: Locale): Promise<OrderView | null>;
   // Customer accounts (the token is the access token kept in the httpOnly cookie).
   login(email: string, password: string): Promise<Result<LoginResult>>;
