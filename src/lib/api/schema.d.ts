@@ -6414,6 +6414,549 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Customers who made an account, with their orders and spending (best spenders first), and a summary of the orders placed without an account */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    sort?: "spent" | "recent" | "orders" | "new";
+                    limit?: number;
+                    offset?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCustomerList"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/customers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One customer: contact details, spending, orders, favorites count and the owner's private note */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminCustomerDetail"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/customers/{id}/note": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Save your private note about a customer (never shown to the customer) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        note: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Ok"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/buyers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Buyers recognised by the one-way fingerprint of their phone number, with or without an account: repeat buyers (2+ orders) or buyers whose parcels came back. Nobody's number is stored, so a buyer is shown by a short code and his orders. Needs FINGERPRINT_SECRET; orders placed before it was set are not included. */
+        get: {
+            parameters: {
+                query?: {
+                    kind?: "repeat" | "returners";
+                    limit?: number;
+                    offset?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminBuyerList"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/admins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Everyone who can open the dashboard */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TeamMember"][];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Give someone access to the dashboard: a new account gets an invitation email, an existing account is promoted. Their open sessions change within the hour. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: email */
+                        email: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Invited */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TeamMember"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/admins/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Take dashboard access away (the account stays as a normal customer). You cannot remove yourself or the last admin. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Ok"];
+                    };
+                };
+                /** @description Missing or invalid token */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not an admin */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Invalid input */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/delivery": {
         parameters: {
             query?: never;
@@ -8462,6 +9005,7 @@ export interface components {
             expiredOrders: number;
             deletedEvents: number;
             trackingUpdated: number;
+            ipFingerprintsErased: number;
         };
         MeProfile: {
             /** Format: uuid */
@@ -8621,6 +9165,8 @@ export interface components {
                 campaign: string | null;
                 content: string | null;
             } | null;
+            /** @enum {string|null} */
+            buyerRisk: "loyal" | "watch" | "high" | null;
         };
         AdminOrderDetail: components["schemas"]["AdminOrderRow"] & {
             subtotal: number;
@@ -8650,6 +9196,16 @@ export interface components {
                 whatsappUrl: string;
                 whatsappAskUrl: string;
                 telUrl: string;
+            } | null;
+            buyer: {
+                code: string;
+                previousOrders: number;
+                delivered: number;
+                returned: number;
+                cancelled: number;
+                /** @enum {string|null} */
+                risk: "loyal" | "watch" | "high" | null;
+                sameConnectionOthers: number;
             } | null;
             /** @description Only in the answer to 'confirm': a WhatsApp link with the tracking number and page already typed for the customer (his phone is erased right after, so this is the only chance) */
             whatsappTrackingUrl: string | null;
@@ -9054,6 +9610,97 @@ export interface components {
                 spend: number;
                 netProfit: number;
             };
+        };
+        AdminCustomerList: {
+            items: components["schemas"]["AdminCustomerRow"][];
+            total: number;
+            /** @description Orders placed without an account. We keep no name or phone for them after the order is confirmed (privacy), so they cannot be listed. */
+            guests: {
+                orders: number;
+                delivered: number;
+                sales: number;
+            };
+        };
+        AdminCustomerRow: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            email: string | null;
+            phone: string | null;
+            createdAt: string;
+            /** @description Orders placed (cancelled ones excluded) */
+            orders: number;
+            delivered: number;
+            returned: number;
+            /** @description Total of the delivered orders */
+            spent: number;
+            lastOrderAt: string | null;
+            hasNote: boolean;
+        };
+        AdminCustomerDetail: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            email: string | null;
+            phone: string | null;
+            whatsappUrl: string | null;
+            createdAt: string;
+            note: string;
+            favorites: number;
+            /** @description Orders placed (cancelled ones excluded) */
+            orders: number;
+            delivered: number;
+            returned: number;
+            /** @description Total of the delivered orders */
+            spent: number;
+            lastOrderAt: string | null;
+            orderList: {
+                /** Format: uuid */
+                id: string;
+                orderNumber: number;
+                /** @enum {string} */
+                status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled" | "returned";
+                total: number;
+                itemCount: number;
+                createdAt: string;
+            }[];
+        };
+        AdminBuyerList: {
+            items: components["schemas"]["AdminBuyer"][];
+            total: number;
+            counts: {
+                repeat: number;
+                returners: number;
+            };
+        };
+        AdminBuyer: {
+            /** @description Short label of the fingerprint, to tell buyers apart (e.g. A3F9-12BC). It is not the phone number. */
+            code: string;
+            /** @description Orders placed (cancelled ones excluded) */
+            orders: number;
+            delivered: number;
+            returned: number;
+            cancelled: number;
+            spent: number;
+            lastOrderAt: string;
+            /** @enum {string|null} */
+            risk: "loyal" | "watch" | "high" | null;
+            recentOrders: {
+                /** Format: uuid */
+                id: string;
+                orderNumber: number;
+                /** @enum {string} */
+                status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled" | "returned";
+                total: number;
+                createdAt: string;
+            }[];
+        };
+        TeamMember: {
+            id: string;
+            email: string;
+            createdAt: string | null;
+            lastSignInAt: string | null;
+            isYou: boolean;
         };
         AdminDelivery: {
             provider: string;
